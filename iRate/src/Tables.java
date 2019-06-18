@@ -91,7 +91,7 @@ public class Tables {
                     + "  movie_id int NOT NULL," 
                     + "  review_date DATE NOT NULL,"
                     + "  rating INT NOT NULL," 
-                    + "  check (rating in (1, 2, 3, 4, 5)),"
+                    + "  check (rating between 0 and 5),"
                     + "  short_review varchar(1000) NOT NULL,"
                     + "  PRIMARY KEY (reviewID)," 
                     + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
