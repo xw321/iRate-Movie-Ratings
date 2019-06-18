@@ -59,11 +59,12 @@ public class Tables {
             // create the Customer table
             String createTable_Customer = 
                       "create table Customer(" 
-                    + "  customerID int,"
+                    + "  ID int,"
                     + "  customer_Name varchar(32)," 
                     + "  Email varchar(32)," 
                     + "  address varchar(32),"
-                    + "  join_date date"  
+                    + "  join_date date," 
+                    + "  PRIMARY KEY (ID)" 
                     + ")";                     
             stmt.executeUpdate(createTable_Customer);
             System.out.println("Created table Customer");
@@ -74,7 +75,8 @@ public class Tables {
             String createTable_Movie = 
                       "create table Movie("
                     + "  movie_title varchar(100),"
-                    + "  movie_id int"
+                    + "  ID int,"
+                    + "  PRIMARY KEY (id)"
                     + ")";
             stmt.executeUpdate(createTable_Movie);
             System.out.println("Created table Movie");
@@ -82,6 +84,17 @@ public class Tables {
 
             // create the Review table
             String createTable_Review = 
+                      "create table Review(" 
+                    + "  reviewID int,"
+                    + "  customer_id int," 
+                    + "  movie_id int," 
+                    + "  review_date DATE,"
+                    + "  rating int," 
+                    + "  short_review varchar(100),"
+                    + "  PRIMARY KEY (reviewID)," 
+                    + "  FOREIGN KEY (customer_id) references Customer(ID),"
+                    + "  FOREIGH KEY (movie_id) references Movie(ID)"
+                    + ")";    
 
             stmt.executeUpdate(createTable_Review);
             System.out.println("Created table Review");
