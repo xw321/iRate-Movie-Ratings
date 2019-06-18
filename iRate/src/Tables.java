@@ -92,8 +92,9 @@ public class Tables {
                     + "  rating ENUM('0 stars', '1 stars', '2 stars', '3 stars', '4 stars', '5 stars') NOT NULL," 
                     + "  short_review varchar(100) NOT NULL,"
                     + "  PRIMARY KEY (reviewID)," 
-                    + "  FOREIGN KEY (customer_id) references Customer(ID),"
-                    + "  FOREIGH KEY (movie_id) references Movie(ID)"
+                    + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
+                    + "  FOREIGN KEY (customer_id) references Customer(ID) ON DELETE CASCADE,"
+                    + "  FOREIGH KEY (movie_id) references Movie(ID) ON DELETE CASCADE"
                     + ")";    
 
             stmt.executeUpdate(createTable_Review);
