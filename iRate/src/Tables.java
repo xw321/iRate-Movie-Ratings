@@ -74,8 +74,8 @@ public class Tables {
             // create the Movie table
             String createTable_Movie = 
                       "create table Movie("
-                    + "  movie_title varchar(100 NOT NULL,"
-                    + "  ID int NOT NULL,"
+                    + "  movie_title varchar(100) NOT NULL,"
+                    + "  id int NOT NULL,"
                     + "  PRIMARY KEY (id)"
                     + ")";
             stmt.executeUpdate(createTable_Movie);
@@ -93,8 +93,8 @@ public class Tables {
                     + "  short_review varchar(100) NOT NULL,"
                     + "  PRIMARY KEY (reviewID)," 
                     + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
-                    + "  FOREIGN KEY (customer_id) references Customer(ID) ON DELETE CASCADE,"
-                    + "  FOREIGH KEY (movie_id) references Movie(ID) ON DELETE CASCADE"
+                    + "  FOREIGN KEY (customer_id) references Customer(ID) ON DELETE CASCADE,"  // if a customer is deleted, all of his or her reviews and endorsement are deleted.
+                    + "  FOREIGH KEY (movie_id) references Movie(id) ON DELETE CASCADE"   // if a movie is deleted, all of its reviews are also deleted.
                     + ")";    
 
             stmt.executeUpdate(createTable_Review);
