@@ -59,11 +59,11 @@ public class Tables {
             // create the Customer table
             String createTable_Customer = 
                       "create table Customer(" 
-                    + "  ID int,"
-                    + "  customer_Name varchar(32)," 
-                    + "  Email varchar(32)," 
-                    + "  address varchar(32),"
-                    + "  join_date date," 
+                    + "  ID int NOT NULL,"
+                    + "  customer_Name varchar(100) NOT NULL," 
+                    + "  Email varchar(32) NOT NULL," 
+                    + "  address varchar(32) NOT NULL,"
+                    + "  join_date date NOT NULL," 
                     + "  PRIMARY KEY (ID)" 
                     + ")";                     
             stmt.executeUpdate(createTable_Customer);
@@ -74,8 +74,8 @@ public class Tables {
             // create the Movie table
             String createTable_Movie = 
                       "create table Movie("
-                    + "  movie_title varchar(100),"
-                    + "  ID int,"
+                    + "  movie_title varchar(100 NOT NULL,"
+                    + "  ID int NOT NULL,"
                     + "  PRIMARY KEY (id)"
                     + ")";
             stmt.executeUpdate(createTable_Movie);
@@ -85,12 +85,12 @@ public class Tables {
             // create the Review table
             String createTable_Review = 
                       "create table Review(" 
-                    + "  reviewID int,"
-                    + "  customer_id int," 
-                    + "  movie_id int," 
+                    + "  reviewID int NOT NULL,"
+                    + "  customer_id int NOT NULL," 
+                    + "  movie_id int NOT NULL," 
                     + "  review_date DATE,"
-                    + "  rating int," 
-                    + "  short_review varchar(100),"
+                    + "  rating ENUM('0 stars', '1 stars', '2 stars', '3 stars', '4 stars', '5 stars') NOT NULL," 
+                    + "  short_review varchar(100) NOT NULL,"
                     + "  PRIMARY KEY (reviewID)," 
                     + "  FOREIGN KEY (customer_id) references Customer(ID),"
                     + "  FOREIGH KEY (movie_id) references Movie(ID)"
