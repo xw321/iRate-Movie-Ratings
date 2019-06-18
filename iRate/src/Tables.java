@@ -57,17 +57,32 @@ public class Tables {
 
 
             // create the Customer table
-            String createTable_Customer = "";
+            String createTable_Customer = 
+                      "create table Customer(" 
+                    + "  customerID int,"
+                    + "  customer_Name varchar(32)," 
+                    + "  Email varchar(32)," 
+                    + "  address varchar(32),"
+                    + "  join_date date"  
+                    + ")";                     
             stmt.executeUpdate(createTable_Customer);
             System.out.println("Created table Customer");
 
+
+
             // create the Movie table
-            String createTable_Movie = "";
+            String createTable_Movie = 
+                      "create table Movie("
+                    + "  movie_title varchar(100),"
+                    + "  movie_id int"
+                    + ")";
             stmt.executeUpdate(createTable_Movie);
             System.out.println("Created table Movie");
 
+
             // create the Review table
-            String createTable_Review = "";
+            String createTable_Review = 
+
             stmt.executeUpdate(createTable_Review);
             System.out.println("Created table Review");
 
