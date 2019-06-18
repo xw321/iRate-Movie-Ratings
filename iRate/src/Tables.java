@@ -59,10 +59,10 @@ public class Tables {
             // create the Customer table
             String createTable_Customer = 
                       "create table Customer(" 
-                    + "  ID int NOT NULL,"
-                    + "  customer_Name varchar(100) NOT NULL," 
-                    + "  Email varchar(32) NOT NULL," 
-                    + "  address varchar(32) NOT NULL,"
+                    + "  ID int NOT NULL AUTO_INCREMENT,"
+                    + "  customer_Name varchar(64) NOT NULL," 
+                    + "  Email varchar(64) NOT NULL," 
+                    + "  address varchar(64) NOT NULL,"
                     + "  join_date date NOT NULL," 
                     + "  PRIMARY KEY (ID)" 
                     + ")";                     
@@ -74,8 +74,8 @@ public class Tables {
             // create the Movie table
             String createTable_Movie = 
                       "create table Movie("
-                    + "  movie_title varchar(100) NOT NULL,"
-                    + "  id int NOT NULL,"
+                    + "  movie_title varchar(64) NOT NULL,"
+                    + "  id int NOT NULL AUTO_INCREMENRT,"
                     + "  PRIMARY KEY (id)"
                     + ")";
             stmt.executeUpdate(createTable_Movie);
@@ -85,12 +85,12 @@ public class Tables {
             // create the Review table
             String createTable_Review = 
                       "create table Review(" 
-                    + "  reviewID int NOT NULL,"
+                    + "  reviewID int NOT NULL AUTO_INCREMENT,"
                     + "  customer_id int NOT NULL," 
                     + "  movie_id int NOT NULL," 
-                    + "  review_date DATE,"
+                    + "  review_date DATE NOT NULL,"
                     + "  rating ENUM('0 stars', '1 stars', '2 stars', '3 stars', '4 stars', '5 stars') NOT NULL," 
-                    + "  short_review varchar(100) NOT NULL,"
+                    + "  short_review varchar(1000) NOT NULL,"
                     + "  PRIMARY KEY (reviewID)," 
                     + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
                     + "  FOREIGN KEY (customer_id) references Customer(ID) ON DELETE CASCADE,"  // if a customer is deleted, all of his or her reviews and endorsement are deleted.
