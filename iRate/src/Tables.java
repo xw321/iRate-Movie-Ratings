@@ -100,12 +100,28 @@ public class Tables {
             System.out.println("Created table Review");
 
             // create the Attendance table
-            String createTable_Attendance = "";
+            String createTable_Attendance =
+                    "create table Attendance("
+                            + "movie_id INT NOT NULL,"
+                            + "customer_id INT NOT NULL,"
+                            + "attendance_date DATE NOT NULL,"
+                            + "primary key (movie_id, customer_id, attendance_date),"
+                            + "foreign key (movie_id) REFERENCES Movie (id) on delete cascade ,"
+                            + "foreign key (customer_id) REFERENCES Customer (id) on delete cascade "
+                            + ")";
+            ;
             stmt.executeUpdate(createTable_Attendance);
             System.out.println("Created table Attendance");
 
             // create the Endorsement table
-            String createTable_Endorsement = "";
+            String createTable_Endorsement =
+                    "create table Endorsement("
+                            + "review_id INT NOT NULL,"
+                            + "endorser_id INT NOT NULL,"
+                            + "endorse_date DATE NOT NULL,"
+                            + "PRIMARY KEY (review_id, endorser_id,endorse_date),"
+                            + "FOREIGN KEY (review_id) REFERENCES Review (id)"
+                            + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
 
