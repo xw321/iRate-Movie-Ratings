@@ -64,7 +64,8 @@ public class Tables {
                     + "  Email varchar(64) NOT NULL," 
                     + "  address varchar(64) NOT NULL,"
                     + "  join_date date NOT NULL," 
-                    + "  PRIMARY KEY (ID)" 
+                    + "  PRIMARY KEY (ID),"
+                    + " check isValidEmail(Email)"
                     + ")";                     
             stmt.executeUpdate(createTable_Customer);
             System.out.println("Created table Customer");
@@ -125,6 +126,21 @@ public class Tables {
                             + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
+            
+            
+            
+            
+             String create_isValidEmail = "create function isValidEmail("
+                    + "s varchar(64)"
+                    + ") returns boolean "
+                    + "PARAMETER STYLE JAVA "
+                    + "LANGUAGE JAVA "
+                    + "DETERMINISTIC "
+                    + "NO SQL "
+                    + "EXTERNAL NAME "
+                    + "'Helper.isValidEmail'";
+            stmt.executeUpdate(create_isValidEmail);
+            System.out.println("Created function isValidEmail()");
 
         } catch (SQLException e) {
             e.printStackTrace();
