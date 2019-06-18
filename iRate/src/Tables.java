@@ -59,7 +59,7 @@ public class Tables {
             // create the Customer table
             String createTable_Customer = 
                       "create table Customer(" 
-                    + "  ID int NOT NULL AUTO_INCREMENT,"
+                    + "  ID int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                     + "  customer_Name varchar(64) NOT NULL," 
                     + "  Email varchar(64) NOT NULL," 
                     + "  address varchar(64) NOT NULL,"
@@ -76,7 +76,7 @@ public class Tables {
             String createTable_Movie = 
                       "create table Movie("
                     + "  movie_title varchar(64) NOT NULL,"
-                    + "  id int NOT NULL AUTO_INCREMENRT,"
+                    + "  id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                     + "  PRIMARY KEY (id)"
                     + ")";
             stmt.executeUpdate(createTable_Movie);
@@ -86,7 +86,7 @@ public class Tables {
             // create the Review table
             String createTable_Review = 
                       "create table Review(" 
-                    + "  reviewID int NOT NULL AUTO_INCREMENT,"
+                    + "  reviewID int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                     + "  customer_id int NOT NULL," 
                     + "  movie_id int NOT NULL," 
                     + "  review_date DATE NOT NULL,"
