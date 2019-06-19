@@ -12,6 +12,8 @@ During the development, we utilized following technologies:
 
 ## Description of The Project
 
+
+
 ## Reference to the Class with Link:
 For more information about the class, please go to this page:
 http://www.ccis.northeastern.edu/home/pgust/classes/cs5200/2019/Summer1/index.html
