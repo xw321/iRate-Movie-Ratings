@@ -1,4 +1,4 @@
-# iRate-Movie-Ratings
+# iRate Database Managing Project
 ## Project Overview
 This is the capstone project for Database Management System course in Northeastern University - Silicon Valley Campus. The iRate project is a portion of an application that enables registered movie theater customers to rate a movie that they saw at the theater, and for other registered customers to vote for reviews.
 
@@ -48,13 +48,16 @@ This project is to develop and document a data model for representing entities a
 * Endorsement
 
 #### Attendance table contains three attributes:
-1)
-2)
-3)
+1) movie_id: a foreign key references movie_id in the Movie table;
+2) customer_id: a foreign key references customer_id in the Customer table;
+3) attendance_date: date the customer attended a specific movie as date;
+movie_id, customer_id, and attendance_date together are primary keys.
 
 #### Endorsement table contains three attributes:
-1)
-2)
+1) review_id: a foreign key references review_id in the review table;
+2) endorse_id: id of an endorsement;
+3) endorse_date: date a review is endorsed as date;
+review_id, endorse_id, and endorse_date together are primary keys. 
 
 (Insert graphes)
 
