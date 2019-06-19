@@ -23,31 +23,38 @@ This project is to develop and document a data model for representing entities a
 * Customer
 * Review
 
-* Movie tables contains three attributes:
-1) 
-2)
-3)
+* Movie table contains two attributes:
+1) movie_title: title of the movie as varchar and not null;
+2) movie_id (primary key): self-generated identity of the movie as int (start with 1, increment by 1);
 
-* Customer tables contains five attributes:
-1)
-2)
-3)
-4)
-5)
+* Customer table contains five attributes:
+1) customer_id (primary key): self-generated id of customer as int (start with 1, increment by 1);
+2) customer_Name: name of customers as varchar and not null;
+3) email: customer's email as varchar and not null;
+4) address: customer's address as varchar and not null;
+5) join_date: date customer registered as date and not null;
 
-* Review tables contains eight attributes
-1)
-2)
-3)
-4)
-5)
-6)
-7)
-8)
+* Review table contains six attributes
+1) review_id (primary key): self-generated id of review as int (start with 1, increment by 1);
+2) customer_id: a foreign key references customer_id in the Customer table. If a customer is deleted, all of his/her reviews and endorsement are deleted;
+3) movie_id: a foreign key references movie_id in the Movie table. If a movie is deleted, all of its reviews are also deleted;
+4) review_date: date the review is created as date and not null;
+5) rating (check between 0 and 5): rating of the movie that is given by customer as int and not null;
+6) review (text): review that is writen by customer as varchar and not nulll;
+
 
 ### 2. Relationship
 * Attendance
 * Endorsement
+
+* Attendance table contains three attributes:
+1)
+2)
+3)
+
+* Endorsement table contains three attributes:
+1)
+2)
 
 (Insert graphes)
 
