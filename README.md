@@ -23,7 +23,7 @@ This project is to develop and document a data model for representing entities a
 * Customer
 * Review
 
-* Movie table contains two attributes:
+##### Movie table contains two attributes:
 1) movie_title: title of the movie as varchar and not null;
 2) movie_id (primary key): self-generated identity of the movie as int (start with 1, increment by 1);
 
