@@ -18,7 +18,11 @@ public class Tables {
                 "Review", "Customer", "Movie"        // entities
         };
 
+        // triggers created by this program
         String dbTriggers[] = {};
+
+        // procedures created by this program
+        String storedFunctions[] = {"isEmail"};
 
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
@@ -55,49 +59,71 @@ public class Tables {
                 }
             }
 
+            // drop the storedFunctions and recreate them below
+            for (String func : storedFunctions) {
+                try {
+                    stmt.executeUpdate("drop function " + func);
+                    System.out.println("Dropped function " + func);
+                } catch (SQLException ex) {
+                    System.out.println("Did not drop function " + func);
+                }
+            }
+
+            // create the isEmail stored procedure
+            String create_isEmail = "create function isEmail("
+                    + " Email varchar(64)"
+                    + " ) RETURNS BOOLEAN "
+                    + " PARAMETER STYLE JAVA "
+                    + " LANGUAGE JAVA "
+                    + " DETERMINISTIC "
+                    + " NO SQL "
+                    + " EXTERNAL NAME "
+                    + " 'Helper.isEmail'";
+            stmt.executeUpdate(create_isEmail);
+            System.out.println("Created function isEmail()");
+
 
             // create the Customer table
-            String createTable_Customer = 
-                 "create table Customer(" 
-                    + "  customer_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-                    + "  customer_Name varchar(64) NOT NULL," 
-                    + "  email varchar(64) NOT NULL," 
-                    + "  address varchar(64) NOT NULL,"
-                    + "  join_date date NOT NULL," 
-                    + "  PRIMARY KEY (customer_id)"
-//                    + "  check isValidEmail(Email)"
-                    + ")";                     
+            String createTable_Customer =
+                    "create table Customer("
+                            + "  customer_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  customer_Name varchar(64) NOT NULL,"
+                            + "  email varchar(64) NOT NULL,"
+                            + "  address varchar(64) NOT NULL,"
+                            + "  join_date date NOT NULL,"
+                            + "  PRIMARY KEY (customer_id),"
+                            + "  check (isEmail(email))"
+                            + ")";
             stmt.executeUpdate(createTable_Customer);
             System.out.println("Created table Customer");
 
 
-
             // create the Movie table
-            String createTable_Movie = 
-                 "create table Movie("
-                    + "  movie_title varchar(64) NOT NULL,"
-                    + "  movie_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-                    + "  PRIMARY KEY (movie_id)"
-                    + ")";
+            String createTable_Movie =
+                    "create table Movie("
+                            + "  movie_title varchar(64) NOT NULL,"
+                            + "  movie_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  PRIMARY KEY (movie_id)"
+                            + ")";
             stmt.executeUpdate(createTable_Movie);
             System.out.println("Created table Movie");
 
 
             // create the Review table
-            String createTable_Review = 
-                 "create table Review(" 
-                    + "  review_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-                    + "  customer_id int NOT NULL," 
-                    + "  movie_id int NOT NULL," 
-                    + "  review_date DATE NOT NULL,"
-                    + "  rating INT NOT NULL," 
-                    + "  check (rating between 0 and 5),"
-                    + "  review varchar(1000) NOT NULL,"
-                    + "  PRIMARY KEY (review_id)," 
-                    + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
-                    + "  FOREIGN KEY (customer_id) references Customer(customer_id) ON DELETE CASCADE,"  // if a customer is deleted, all of his or her reviews and endorsement are deleted.
-                    + "  FOREIGN KEY (movie_id) references Movie(movie_id) ON DELETE CASCADE"   // if a movie is deleted, all of its reviews are also deleted.
-                    + ")";    
+            String createTable_Review =
+                    "create table Review("
+                            + "  review_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  customer_id int NOT NULL,"
+                            + "  movie_id int NOT NULL,"
+                            + "  review_date DATE NOT NULL,"
+                            + "  rating INT NOT NULL,"
+                            + "  check (rating between 0 and 5),"
+                            + "  review varchar(1000) NOT NULL,"
+                            + "  PRIMARY KEY (review_id),"
+                            + "  UNIQUE (movie_id, customer_id),"  // make sure to have one movie review per customer
+                            + "  FOREIGN KEY (customer_id) references Customer(customer_id) ON DELETE CASCADE,"  // if a customer is deleted, all of his or her reviews and endorsement are deleted.
+                            + "  FOREIGN KEY (movie_id) references Movie(movie_id) ON DELETE CASCADE"   // if a movie is deleted, all of its reviews are also deleted.
+                            + ")";
 
             stmt.executeUpdate(createTable_Review);
             System.out.println("Created table Review");
@@ -127,21 +153,7 @@ public class Tables {
                             + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
-            
-            
-            
-            
-//             String create_isValidEmail = "create function isValidEmail("
-//                    + "s varchar(64)"
-//                    + ") returns boolean "
-//                    + "PARAMETER STYLE JAVA "
-//                    + "LANGUAGE JAVA "
-//                    + "DETERMINISTIC "
-//                    + "NO SQL "
-//                    + "EXTERNAL NAME "
-//                    + "'Helper.isValidEmail'";
-//            stmt.executeUpdate(create_isValidEmail);
-//            System.out.println("Created function isValidEmail()");
+
 
         } catch (SQLException e) {
             e.printStackTrace();
