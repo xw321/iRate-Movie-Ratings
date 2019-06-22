@@ -60,7 +60,7 @@ movie_id, customer_id, and attendance_date together are primary keys.
 3) endorse_date: date a review is endorsed as date;
 review_id, endorse_id, and endorse_date together are primary keys. 
 
-### Constraints 
+### 3. Constraints 
 * If a customer does not provide a valid email address, he/she cannot be added to the table.
 * If a customer did not attend a movie, he/she cannot review the movie.
 * The date of the review cannot be provided before the attendance date and must be within 7 days of the most recent attendance of the movie
