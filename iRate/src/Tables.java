@@ -19,11 +19,9 @@ public class Tables {
         };
 
         // triggers created by this program
-<<<<<<< HEAD
+
         String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2"};
-=======
         String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2", "endorse_limit_by_customer"};
->>>>>>> 49eccd3c929a10bd8e7ea008f8ab7364c8e0fef3
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail"};
@@ -152,10 +150,7 @@ public class Tables {
                             + "review_id INT NOT NULL,"
                             + "endorser_id INT NOT NULL,"
                             + "endorse_date TIMESTAMP NOT NULL,"
-<<<<<<< HEAD
-=======
                             + "UNIQUE (endorser_id, endorse_date, review_id),"  // Customers can endorse one review of a particular movie each day.
->>>>>>> 49eccd3c929a10bd8e7ea008f8ab7364c8e0fef3
                             + "PRIMARY KEY (review_id, endorser_id, endorse_date),"
                             + "FOREIGN KEY (review_id) REFERENCES Review (review_id)"
                             + ")";
@@ -200,7 +195,7 @@ public class Tables {
             stmt.executeUpdate(createTrigger_review_limit_by_date2);
             System.out.println("Created review_limit trigger for Review by Date2");
 
-<<<<<<< HEAD
+
 
             /*
        Create trigger endorse_limit
@@ -223,7 +218,7 @@ public class Tables {
             stmt.executeUpdate(createTrigger_endorse_limit_by_date);
             System.out.println("Created endorse_limit trigger for endorse limit by Date");
 
-=======
+
             // This trigger will delete the inserted Endorsement if the customer is the one who wrote the review
             String createTrigger_endorse_limit_by_customer =
                     "create trigger endorse_limit_by_customer"
@@ -234,7 +229,6 @@ public class Tables {
                             + "     (select review_id from Review where Review.customer_id = insertedRow.endorser_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_customer);
             System.out.println("Created review_limit trigger for Review by Customer");
->>>>>>> 49eccd3c929a10bd8e7ea008f8ab7364c8e0fef3
 
 
         } catch (SQLException e) {
