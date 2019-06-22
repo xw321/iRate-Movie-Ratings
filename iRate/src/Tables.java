@@ -19,7 +19,7 @@ public class Tables {
         };
 
         // triggers created by this program
-        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2"};
+        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2", "endorse_limit_by_customer"};
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail"};
@@ -193,7 +193,7 @@ public class Tables {
             stmt.executeUpdate(createTrigger_review_limit_by_date2);
             System.out.println("Created review_limit trigger for Review by Date2");
 
-            // 1) This trigger will delete the inserted Endorsement if the customer is the one who wrote the review
+            // This trigger will delete the inserted Endorsement if the customer is the one who wrote the review
             String createTrigger_endorse_limit_by_customer =
                     "create trigger endorse_limit_by_customer"
                             + " after insert ON Endorsement"
