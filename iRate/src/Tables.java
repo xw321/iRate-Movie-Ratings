@@ -21,7 +21,7 @@ public class Tables {
         // triggers created by this program
 
         String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2"};
-        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2", "endorse_limit_by_customer"};
+        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2", "endorse_limit_by_customer", "endorse_limit_by date"};
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail"};
