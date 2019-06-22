@@ -202,8 +202,6 @@ public class Tables {
        Constraints:
        1) if a customer is the one who wrote the review, cannot endorse.
        2) if the endorse_date is after 3 days when the review was written, cannot endorse.
-       3) if the customer has endorse one review of a particular movie on th endorse_date, cannot
-          endorse the same movie second time (Customers can only endorse one review of a particular movie each day).
        */
 
 
