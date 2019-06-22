@@ -18,6 +18,7 @@ During the development, we utilized following technologies:
 
 ## Project Details
 This project is to develop and document a data model for representing entities and relationships in this promotial social media application, provide DDL for creating the tables, DML for editing entries in the tables, and DQL for making commonly used queries to retrieve information about the status of reviews and votes from the database. 
+
 ### 1. Entities
 * Movie
 * Customer
@@ -58,6 +59,14 @@ movie_id, customer_id, and attendance_date together are primary keys.
 2) endorse_id: id of an endorsement;
 3) endorse_date: date a review is endorsed as date;
 review_id, endorse_id, and endorse_date together are primary keys. 
+
+### Constraints 
+* If a customer does not provide a valid email address, he/she cannot be added to the table.
+* If a customer did not attend a movie, he/she cannot review the movie.
+* The date of the review cannot be provided before the attendance date and must be within 7 days of the most recent attendance of the movie
+* If a customer is the one who wrote the review, he/she cannot endorse it.
+* If the date of the endorse is after 3 days when the review was written, customer cannot endorse it.
+* If the customer has endorsed one review of a particular movie on a given day, he/she cannot endorse second time on that day.
 
 (Insert graphes)
 
