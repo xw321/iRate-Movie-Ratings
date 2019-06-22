@@ -19,7 +19,7 @@ public class Tables {
         };
 
         // triggers created by this program
-        String dbTriggers[] = {};
+        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2"};
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail"};
@@ -115,7 +115,7 @@ public class Tables {
                             + "  review_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                             + "  customer_id int NOT NULL,"
                             + "  movie_id int NOT NULL,"
-                            + "  review_date DATE NOT NULL,"
+                            + "  review_date TIMESTAMP NOT NULL,"
                             + "  rating INT NOT NULL,"
                             + "  check (rating between 0 and 5),"
                             + "  review varchar(1000) NOT NULL,"
@@ -133,7 +133,7 @@ public class Tables {
                     "create table Attendance("
                             + "movie_id INT NOT NULL,"
                             + "customer_id INT NOT NULL,"
-                            + "attendance_date DATE NOT NULL,"
+                            + "attendance_date TIMESTAMP NOT NULL,"
                             + "primary key (movie_id, customer_id, attendance_date),"
                             + "foreign key (movie_id) REFERENCES Movie (movie_id) on delete cascade ,"
                             + "foreign key (customer_id) REFERENCES Customer (customer_id) on delete cascade "
@@ -147,12 +147,50 @@ public class Tables {
                     "create table Endorsement("
                             + "review_id INT NOT NULL,"
                             + "endorser_id INT NOT NULL,"
-                            + "endorse_date DATE NOT NULL,"
+                            + "endorse_date TIMESTAMP NOT NULL,"
                             + "PRIMARY KEY (review_id, endorser_id, endorse_date),"
                             + "FOREIGN KEY (review_id) REFERENCES Review (review_id)"
                             + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
+
+
+                 /*
+       Create trigger review_limit
+       Constraints:
+       1) if a customer did not attend a movie, he/she cannot review it.
+       2) the date of the review must be within 7 days of the most recent attendance of the movie.
+       3) the date of the review must be within 7 days of the most recent attendance of the movie
+       */
+            String createTrigger_review_limit_by_attendance =
+                    "create trigger review_limit_by_attendance"
+                            + " after insert ON Review"
+                            + " for each statement"
+                            + "   delete from Review where customer_id not in"
+                            + "     (select customer_id from Attendance)";
+            stmt.executeUpdate(createTrigger_review_limit_by_attendance);
+            System.out.println("Created review_limit trigger for Review by Attendance");
+
+            String createTrigger_review_limit_by_date =
+                    "create trigger review_limit_by_date"
+                            + " after insert ON Review"
+                            + " REFERENCING new as insertedRow"
+                            + " for each row MODE DB2SQL"
+                            + "   delete from Review where review_date <"
+                            + "     (select attendance_date from Attendance where Attendance.customer_id = insertedRow.customer_id)";
+            stmt.executeUpdate(createTrigger_review_limit_by_date);
+            System.out.println("Created review_limit trigger for Review by Date");
+
+            // This trigger will delete the inserted Review if: current_date - 7days > reviewee's attendance date
+            String createTrigger_review_limit_by_date2 =
+                    "create trigger review_limit_by_date2"
+                            + " after insert ON Review"
+                            + " REFERENCING new as insertedRow"
+                            + " for each row MODE DB2SQL"
+                            + "   delete from Review where (select {fn TIMESTAMPADD(SQL_TSI_DAY, -7, CURRENT_TIMESTAMP)} from sysibm.sysdummy1) > "
+                            + "     (select attendance_date from Attendance where Attendance.customer_id = insertedRow.customer_id)";
+            stmt.executeUpdate(createTrigger_review_limit_by_date2);
+            System.out.println("Created review_limit trigger for Review by Date2");
 
 
         } catch (SQLException e) {
@@ -163,7 +201,8 @@ public class Tables {
 
     public static void main(String[] args) {
 
-        System.out.println("Start");
+        System.out.println("*********** Start building iRate Db Schema ***********");
         createTables();
+        System.out.println("*********** Finish building iRate Db Schema ***********");
     }
 }
