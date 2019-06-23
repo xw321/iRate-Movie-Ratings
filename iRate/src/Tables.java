@@ -87,7 +87,7 @@ public class Tables {
             // create the Customer table
             String createTable_Customer =
                     "create table Customer("
-                            + "  customer_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  customer_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 7000, INCREMENT BY 1),"
                             + "  customer_Name varchar(64) NOT NULL,"
                             + "  email varchar(64) NOT NULL,"
                             + "  join_date TIMESTAMP NOT NULL,"
@@ -102,7 +102,7 @@ public class Tables {
             String createTable_Movie =
                     "create table Movie("
                             + "  movie_title varchar(64) NOT NULL,"
-                            + "  movie_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  movie_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 8000, INCREMENT BY 1),"
                             + "  PRIMARY KEY (movie_id)"
                             + ")";
             stmt.executeUpdate(createTable_Movie);
@@ -112,7 +112,7 @@ public class Tables {
             // create the Review table
             String createTable_Review =
                     "create table Review("
-                            + "  review_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + "  review_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 9000, INCREMENT BY 1),"
                             + "  customer_id int NOT NULL,"
                             + "  movie_id int NOT NULL,"
                             + "  review_date TIMESTAMP NOT NULL,"
@@ -171,13 +171,16 @@ public class Tables {
             stmt.executeUpdate(createTrigger_review_limit_by_attendance);
             System.out.println("Created review_limit trigger for Review by Attendance");
 
+
+            // This trigger prevents any invalid review such that it has a review_date earlier than its actual attendance_date
             String createTrigger_review_limit_by_date =
                     "create trigger review_limit_by_date"
                             + " after insert ON Review"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Review where review_date <"
-                            + "     (select attendance_date from Attendance where Attendance.customer_id = insertedRow.customer_id)";
+                            + "   delete from Review where timestamp(review_date) <"
+                            + "     (select timestamp(attendance_date) from Attendance where "
+                            + " Attendance.customer_id = insertedRow.customer_id AND Attendance.movie_id = insertedRow.movie_id)";
             stmt.executeUpdate(createTrigger_review_limit_by_date);
             System.out.println("Created review_limit trigger for Review by Date");
 
@@ -187,8 +190,9 @@ public class Tables {
                             + " after insert ON Review"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Review where (select {fn TIMESTAMPADD(SQL_TSI_DAY, -7, CURRENT_TIMESTAMP)} from sysibm.sysdummy1) > "
-                            + "     (select attendance_date from Attendance where Attendance.customer_id = insertedRow.customer_id)";
+                            + "   delete from Review where (select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -7, insertedRow.review_date)}) from sysibm.sysdummy1) > "
+                            + "     (select timestamp(attendance_date) from Attendance where "
+                            + " Attendance.customer_id = insertedRow.customer_id AND Attendance.movie_id = insertedRow.movie_id)";
             stmt.executeUpdate(createTrigger_review_limit_by_date2);
             System.out.println("Created review_limit trigger for Review by Date2");
 
@@ -208,8 +212,8 @@ public class Tables {
                             + " after insert ON Endorsement"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Endorsement where (select {fn TIMESTAMPADD(SQL_TSI_DAY, -3, CURRENT_TIMESTAMP)} from sysibm.sysdummy1) >"
-                            + "     (select review_date from Review where Review.review_id = insertedRow.review_id)";
+                            + "   delete from Endorsement where (select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, insertedRow.endorse_date)}) from sysibm.sysdummy1) >"
+                            + "     (select timestamp(review_date) from Review where Review.review_id = insertedRow.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_date);
             System.out.println("Created endorse_limit trigger for endorse limit by Date");
 
