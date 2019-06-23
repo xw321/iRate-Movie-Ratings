@@ -83,6 +83,7 @@ public class Tables {
             stmt.executeUpdate(create_isEmail);
             System.out.println("Created function isEmail()");
 
+
             // create the freeGift stored procedure
             String create_freeGift = "create function freeGift("
                     + " date TIMESTAMP"
@@ -95,7 +96,7 @@ public class Tables {
                     + " 'Helper.freeGift'";
             stmt.executeUpdate(create_freeGift);
             System.out.println("Created function freeGift()");
-            
+
             // create the freeTicket stored procedure
             String create_freeTicket = "create function freeTicket("
                     + " date TIMESTAMP"
@@ -109,7 +110,7 @@ public class Tables {
             stmt.executeUpdate(create_freeTicket);
             System.out.println("Created function freeTicket()");
 
-
+            
             // create the Customer table
             String createTable_Customer =
                     "create table Customer("
@@ -232,13 +233,13 @@ public class Tables {
        */
 
 
-            //create Trigger endorse_limit_by_date
+            //create Trigger endorse_limit_by_date: review has to have  earlier time than its endorsements
             String createTrigger_endorse_limit_by_date =
                     " create trigger endorse_limit_by_date"
                             + " after insert ON Endorsement"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Endorsement where (select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, insertedRow.endorse_date)}) from sysibm.sysdummy1) >"
+                            + "   delete from Endorsement where timestamp(insertedRow.endorse_date) <"
                             + "     (select timestamp(review_date) from Review where Review.review_id = insertedRow.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_date);
             System.out.println("Created endorse_limit trigger for endorse limit by Date");
@@ -251,9 +252,11 @@ public class Tables {
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
                             + "   delete from Endorsement where review_id = "
-                            + "     (select review_id from Review where Review.customer_id = insertedRow.endorser_id)";
+                            + "     (select review_id from Review where Review.customer_id = insertedRow.endorser_id AND insertedRow.review_id = Review.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_customer);
             System.out.println("Created review_limit trigger for Review by Customer");
+
+            // TODO: add endorsement trigger limit by one-day-after for same review
 
         } catch (SQLException e) {
             e.printStackTrace();
