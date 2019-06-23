@@ -26,7 +26,7 @@ public class Driver {
 
                 for (int i = 0; i < columns; i++) {
                     //TODO: change validation to regex
-                    if (data[i].length() == 19) {
+                    if (data[i].length() == 19 && data[i].substring(0, 3).equals("201")) {
                         Timestamp ts = Timestamp.valueOf(data[i]);
                         preparedStatement.setTimestamp(i + 1, ts);
                     } else {
@@ -75,7 +75,7 @@ public class Driver {
                 PreparedStatement insertRow_Review = conn.prepareStatement(
                         "insert into Review(customer_id, movie_id, review_date, rating, review) values(?, ?, ?, ?, ?)");
                 PreparedStatement insertRow_Attendance = conn.prepareStatement(
-                        "insert into Attendance(movie_id, customer_id, attendance_date) values(?, ?, ?)");
+                        "insert into Attendance(customer_id, movie_id, attendance_date) values(?, ?, ?)");
                 PreparedStatement insertRow_Endorsement = conn.prepareStatement(
                         "insert into Endorsement(review_id, endorser_id, endorse_date) values(?, ?, ?)");
 
