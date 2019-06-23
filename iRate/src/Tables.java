@@ -23,7 +23,7 @@ public class Tables {
                 "endorse_limit_by_date", "endorse_limit_by_customer"};
 
         // procedures created by this program
-        String storedFunctions[] = {"isEmail"};
+        String storedFunctions[] = {"isEmail", "freeGift", "freeTicket"};
 
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
@@ -82,6 +82,32 @@ public class Tables {
                     + " 'Helper.isEmail'";
             stmt.executeUpdate(create_isEmail);
             System.out.println("Created function isEmail()");
+
+            // create the freeGift stored procedure
+            String create_freeGift = "create function freeGift("
+                    + " date TIMESTAMP"
+                    + " ) RETURNS VARCHAR(64) "
+                    + " PARAMETER STYLE JAVA "
+                    + " LANGUAGE JAVA "
+                    + " DETERMINISTIC "
+                    + " NO SQL "
+                    + " EXTERNAL NAME "
+                    + " 'Helper.freeGift'";
+            stmt.executeUpdate(create_freeGift);
+            System.out.println("Created function freeGift()");
+            
+            // create the freeTicket stored procedure
+            String create_freeTicket = "create function freeTicket("
+                    + " date TIMESTAMP"
+                    + " ) RETURNS VARCHAR(64) "
+                    + " PARAMETER STYLE JAVA "
+                    + " LANGUAGE JAVA "
+                    + " DETERMINISTIC "
+                    + " NO SQL "
+                    + " EXTERNAL NAME "
+                    + " 'Helper.freeTicket'";
+            stmt.executeUpdate(create_freeTicket);
+            System.out.println("Created function freeTicket()");
 
 
             // create the Customer table
