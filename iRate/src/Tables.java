@@ -19,9 +19,8 @@ public class Tables {
         };
 
         // triggers created by this program
-
-        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2"};
-        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2", "endorse_limit_by_customer", "endorse_limit_by date"};
+        String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2",
+                "endorse_limit_by_date", "endorse_limit_by_customer"};
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail"};
@@ -91,8 +90,7 @@ public class Tables {
                             + "  customer_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                             + "  customer_Name varchar(64) NOT NULL,"
                             + "  email varchar(64) NOT NULL,"
-                            + "  address varchar(64) NOT NULL,"
-                            + "  join_date date NOT NULL,"
+                            + "  join_date TIMESTAMP NOT NULL,"
                             + "  PRIMARY KEY (customer_id),"
                             + "  check (isEmail(email))"
                             + ")";
@@ -150,7 +148,6 @@ public class Tables {
                             + "review_id INT NOT NULL,"
                             + "endorser_id INT NOT NULL,"
                             + "endorse_date TIMESTAMP NOT NULL,"
-                            + "UNIQUE (endorser_id, endorse_date, review_id),"  // Customers can endorse one review of a particular movie each day.
                             + "PRIMARY KEY (review_id, endorser_id, endorse_date),"
                             + "FOREIGN KEY (review_id) REFERENCES Review (review_id)"
                             + ")";
@@ -207,12 +204,12 @@ public class Tables {
 
             //create Trigger endorse_limit_by_date
             String createTrigger_endorse_limit_by_date =
-                    " create trigger endorse_limit_by date"
-                          + " after insert ON Endorsement"
-                          + " REFERENCING new as insertedRow"
-                          + " for each row MODE DB2SQL"
-                          + "   delete from Endorsement where (select {fn TIMESTAMPADD(SQL_TSI_DAY, -3, CURRENT_TIMESTAMP)} from sysibm.sysdummy1}) >"
-                          + "     (select review_date from Review where Review.review_id = insertedRow.review_id)"
+                    " create trigger endorse_limit_by_date"
+                            + " after insert ON Endorsement"
+                            + " REFERENCING new as insertedRow"
+                            + " for each row MODE DB2SQL"
+                            + "   delete from Endorsement where (select {fn TIMESTAMPADD(SQL_TSI_DAY, -3, CURRENT_TIMESTAMP)} from sysibm.sysdummy1) >"
+                            + "     (select review_date from Review where Review.review_id = insertedRow.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_date);
             System.out.println("Created endorse_limit trigger for endorse limit by Date");
 
@@ -227,7 +224,6 @@ public class Tables {
                             + "     (select review_id from Review where Review.customer_id = insertedRow.endorser_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_customer);
             System.out.println("Created review_limit trigger for Review by Customer");
-
 
         } catch (SQLException e) {
             e.printStackTrace();
