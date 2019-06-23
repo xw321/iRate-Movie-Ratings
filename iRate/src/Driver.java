@@ -33,7 +33,13 @@ public class Driver {
                         preparedStatement.setString(i + 1, data[i].trim());
                     }
                 }
-                preparedStatement.executeUpdate();
+                
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException ex) {
+                    System.out.println("~~~~~~OOPS~~~~~~ Invalid Record from " + file + " : " + Arrays.toString(data));
+                    //ex.printStackTrace();
+                }
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
