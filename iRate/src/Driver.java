@@ -159,27 +159,27 @@ public class Driver {
                 }
             }
 
-//            // freeTicket function testing
-//            PreparedStatement invoke_freeTicket =
-//                    conn.prepareStatement("values ( freeTicket(?) )");
-//            System.out.println("");
-//            System.out.println("Test for freeTicket function");
-//
-//            String[] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
-//            for (String date : queryDate2) {
-//                try {
-//                    invoke_freeGift.setString(1, date);
-//                    ResultSet rs2 = invoke_freeTicket.executeQuery();
-//                    if (rs2.next()) {
-//                        System.out.println("The winner of the free ticket is: ");
-//                        System.out.println(rs2.getString("customer_Name"));
-//
-//                    }
-//                    rs2.close();
-//                } catch (SQLException ex) {
-//                    System.out.printf("There is no winner of the free ticket that day");
-//                }
-//            }
+            // freeTicket function testing
+            PreparedStatement invoke_freeTicket =
+                    conn.prepareStatement("values ( freeTicket(?) )");
+            System.out.println("");
+            System.out.println("Test for freeTicket function");
+
+            String[] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
+            for (String date : queryDate2) {
+                try {
+                    invoke_freeGift.setString(1, date);
+                    ResultSet rs2 = invoke_freeTicket.executeQuery();
+                    if (rs2.next()) {
+                        System.out.println("The winner of the free ticket is: ");
+                        System.out.println(rs2.getString("customer_Name"));
+
+                    }
+                    rs2.close();
+                } catch (SQLException ex) {
+                    System.out.printf("There is no winner of the free ticket that day");
+                }
+            }
 
 
         } catch (
