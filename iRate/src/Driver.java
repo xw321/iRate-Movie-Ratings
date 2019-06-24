@@ -57,8 +57,8 @@ public class Driver {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user1");
-        props.put("password", "user1");
+        props.put("user", "user2");
+        props.put("password", "user2");
 
         // result set for queries
         ResultSet rs = null;
@@ -120,29 +120,33 @@ public class Driver {
 
             System.out.println("*****Test for movieRating function*****\n");
             Helper.movieRating(conn, "Rush hour");
+            
+            
+            // mostReview function testing
+            System.out.println("*****Test for mostReview function*****\n");
+            Helper.mostReview(conn, "2019-06-24");
 
-
-            // freeTicket function testing
-            PreparedStatement invoke_freeTicket =
-                    conn.prepareStatement("values ( freeTicket(?) )");
-            System.out.println("");
-            System.out.println("Test for freeTicket function");
-
-            String[] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
-            for (String date : queryDate2) {
-                try {
-                    invoke_freeGift.setString(1, date);
-                    ResultSet rs2 = invoke_freeTicket.executeQuery();
-                    if (rs2.next()) {
-                        System.out.println("The winner of the free ticket is: ");
-                        System.out.println(rs2.getString("customer_Name"));
-
-                    }
-                    rs2.close();
-                } catch (SQLException ex) {
-                    System.out.printf("There is no winner of the free ticket that day");
-                }
-            }
+//            // freeTicket function testing
+//            PreparedStatement invoke_freeTicket =
+//                    conn.prepareStatement("values ( freeTicket(?) )");
+//            System.out.println("");
+//            System.out.println("Test for freeTicket function");
+//
+//            String[] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
+//            for (String date : queryDate2) {
+//                try {
+//                    invoke_freeGift.setString(1, date);
+//                    ResultSet rs2 = invoke_freeTicket.executeQuery();
+//                    if (rs2.next()) {
+//                        System.out.println("The winner of the free ticket is: ");
+//                        System.out.println(rs2.getString("customer_Name"));
+//
+//                    }
+//                    rs2.close();
+//                } catch (SQLException ex) {
+//                    System.out.printf("There is no winner of the free ticket that day");
+//                }
+//            }
 
 
         } catch (SQLException e) {

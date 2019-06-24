@@ -29,8 +29,8 @@ public class Helper {
                 + "GROUP BY Endorsement.review_id ORDER BY COUNT DESC limit(1)";
     }
 
-    public static void freeGift(Connection conn, String date) {
-        if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
+   public static void freeGift(Connection conn, String date) {
+         if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
             // Date format: yyyy-MM-dd
             String endTime = " 23:59:59";
             String startTime = " 00:00:00";
@@ -82,5 +82,33 @@ public class Helper {
         } catch (SQLException ex) {
             System.out.printf("There is no winner of the free concession items that day");
         }
+    }
+    
+    // procedure to find the movie with most reviews before a certain date
+    public static void mostReview (Connection conn, String date) {
+    	
+    	 if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
+             // Date format: yyyy-MM-dd
+             String endTime = " 23:59:59";
+              
+             Timestamp endTimeStamp = Timestamp.valueOf(date + endTime);
+
+             // execute query
+             try {
+                 String query4 = "SELECT COUNT(review_id) AS reviewCnt, movie_id FROM Review GROUP BY movie_id ORDER BY reviewCnt DESC WHERE timestamp(Review.review_date) <= (?)";
+                 PreparedStatement invoke_mostReview = conn.prepareStatement(query4);
+                 invoke_mostReview.setTimestamp(1, endTimeStamp);
+
+                 ResultSet rs5 = invoke_mostReview.executeQuery();
+                 while (rs5.next()) {
+                     //System.out.println("The movie with most reviews before date is: ");
+                     System.out.println("The movie with most reviews before " + date + "is :       " + rs5.getString("movie_id"));
+
+                 }
+                 rs5.close();
+             } catch (SQLException ex) {
+                 System.out.printf("Cannot find the movie with the most reviews");
+             }
+    	 }  	
     }
 }

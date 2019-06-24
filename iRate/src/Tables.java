@@ -28,8 +28,8 @@ public class Tables {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user1");
-        props.put("password", "user1");
+        props.put("user", "user2");
+        props.put("password", "user2");
 
         try (
                 // connect to the database using URL
@@ -110,7 +110,7 @@ public class Tables {
             stmt.executeUpdate(create_freeTicket);
             System.out.println("Created function freeTicket()");
 
-
+            
             // create the Customer table
             String createTable_Customer =
                     "create table Customer("
