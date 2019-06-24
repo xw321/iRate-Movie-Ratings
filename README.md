@@ -70,6 +70,14 @@ review_id, endorse_id, and endorse_date together are primary keys.
 
 ![Data Model](https://github.com/xw321/iRate-Movie-Ratings/blob/master/iRate%20data%20model.png)
 
+### 4. Triggers
+
+### 5. Stored Function
+
+
+## Future Improvement
+
+
 ## Reference to the Class with Link:
 For more information about the class, please go to this page:
 http://www.ccis.northeastern.edu/home/pgust/classes/cs5200/2019/Summer1/index.html
