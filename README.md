@@ -68,7 +68,7 @@ review_id, endorse_id, and endorse_date together are primary keys.
 * If the date of the endorse is after 3 days when the review was written, customer cannot endorse it.
 * If the customer has endorsed one review of a particular movie on a given day, he/she cannot endorse second time on that day.
 
-![Data Model](https://github.com/xw321/iRate-Movie-Ratings/blob/master/iRate/iRate%20Data%20model.png)
+![Data Model](https://github.com/xw321/iRate-Movie-Ratings/blob/master/iRate%20data%20model.png)
 
 ## Reference to the Class with Link:
 For more information about the class, please go to this page:
