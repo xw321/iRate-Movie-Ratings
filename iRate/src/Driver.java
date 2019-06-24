@@ -113,51 +113,14 @@ public class Driver {
             }
             rs.close();
 
-                        // Test of getting avg rating of a given movie
-            String query01 = "select avg(CAST(rating as FLOAT )) as rat from Review INNER JOIN Movie ON Review.movie_id = Movie.movie_id WHERE Movie.movie_title = (?)";
-            PreparedStatement invoke_avgRating = conn.prepareStatement(query01);
-            String[] movie_titles = {"John Wick", "Rush hour", "The Godfather", "The Lion King"};
 
-            for (String movie : movie_titles) {
-                try {
-                    invoke_avgRating.setString(1, movie);
-                    ResultSet rs5 = invoke_avgRating.executeQuery();
-                    if (rs5.next()) {
-                        if (rs5.getString("rat") != null) {
-                            System.out.println("Rating of movie " + movie + " is: " + rs5.getString("rat"));
-                        } else {
-                            System.out.println("No rating for movie " + movie);
-                        }
-
-                    }
-
-                } catch (SQLException ex) {
-                    //System.out.printf("There is no winner of the free concession items that day");
-                }
-
-            }
-            
-            
             // freeGift function testing
             System.out.println("*****Test for freeGift function*****\n");
-            String query0 = "select endorser_id from Endorsement";
-            PreparedStatement invoke_freeGift = conn.prepareStatement(query0);
+            Helper.freeGift(conn, "2019-06-26");
 
-            String[] queryDate = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
-            for (String date : queryDate) {
-                try {
-                    //invoke_freeGift.setString(1, date);
-                    ResultSet rs5 = invoke_freeGift.executeQuery();
-                    if (rs5.next()) {
-                        System.out.println("The winner of the free concession items are: ");
-                        System.out.println(rs5.getInt("endorser_id"));
+            System.out.println("*****Test for movieRating function*****\n");
+            Helper.movieRating(conn, "Rush hour");
 
-                    }
-                    rs5.close();
-                } catch (SQLException ex) {
-                    System.out.printf("There is no winner of the free concession items that day");
-                }
-            }
 
             // freeTicket function testing
             PreparedStatement invoke_freeTicket =
@@ -182,8 +145,7 @@ public class Driver {
             }
 
 
-        } catch (
-                SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
