@@ -114,8 +114,8 @@ public class Driver {
             rs.close();
 
                         // Test of getting avg rating of a given movie
-            String query0 = "select avg(CAST(rating as FLOAT )) as rat from Review INNER JOIN Movie ON Review.movie_id = Movie.movie_id WHERE Movie.movie_title = (?)";
-            PreparedStatement invoke_avgRating = conn.prepareStatement(query0);
+            String query01 = "select avg(CAST(rating as FLOAT )) as rat from Review INNER JOIN Movie ON Review.movie_id = Movie.movie_id WHERE Movie.movie_title = (?)";
+            PreparedStatement invoke_avgRating = conn.prepareStatement(query01);
             String[] movie_titles = {"John Wick", "Rush hour", "The Godfather", "The Lion King"};
 
             for (String movie : movie_titles) {
