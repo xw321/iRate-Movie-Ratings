@@ -110,7 +110,7 @@ public class Tables {
             stmt.executeUpdate(create_freeTicket);
             System.out.println("Created function freeTicket()");
 
-            
+
             // create the Customer table
             String createTable_Customer =
                     "create table Customer("

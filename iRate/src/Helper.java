@@ -13,12 +13,12 @@ public class Helper {
         return email.matches(
                 "^[\\p{L}\\p{N}\\._%+-]+@[\\p{L}\\p{N}\\.\\-]+\\.[\\p{L}]{2,}$");
     }
-    
+
     public static String freeGift(Timestamp date) {
         return "SELECT Customer.customer_Name FROM Customer "
                 + "JOIN Endorsement ON Customer.customer_id = Endorsement.customer_id WHERE endorse_date = " + date;
     }
-    
+
     public static String freeTicket(Timestamp date) {
         return "SELECT Customer.customer_Name, COUNT(*) AS COUNT"
                 + "FROM (Review JOIN Endorsement ON Review.review_id = Endorsement.review_id "
@@ -29,5 +29,3 @@ public class Helper {
                 + "GROUP BY Endorsement.review_id ORDER BY COUNT DESC limit(1)";
     }
 }
-
-
