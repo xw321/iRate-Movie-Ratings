@@ -84,6 +84,58 @@ public class Helper {
         }
     }
     
+    
+       // Select the author of  top voted review written 3 days ago
+    public static void freeTicket(Connection conn) {
+        try {
+            // This query will select the review_id and its count that satisfies the requirement
+            String query0 = "select Endorsement.review_id, count(*) AS nor from Endorsement LEFT JOIN Review ON Endorsement.review_id = Review.review_id" +
+                    " WHERE Review.review_date BETWEEN timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, CURRENT_TIMESTAMP)}) AND CURRENT_TIMESTAMP " +
+                    " GROUP BY Endorsement.review_id ORDER BY Endorsement.review_id DESC ";
+
+            PreparedStatement invoke_freeTicket = conn.prepareStatement(query0);
+            ResultSet rs0 = invoke_freeTicket.executeQuery();
+            int topReviewId = 0;
+            int reviewVote = 0;
+            int movieID = 0;
+
+            if (rs0.next()) {
+                topReviewId = rs0.getInt("review_id");
+                reviewVote = rs0.getInt("nor");
+            }
+
+            // This query will  select the author of the top voted review, which we obtained in query0, and all other info about that review
+            String query1 = "select * from Customer LEFT JOIN Review ON Customer.customer_id = Review.customer_id WHERE Review.review_id = (?)";
+            PreparedStatement invoke_freeTicket1 = conn.prepareStatement(query1);
+            invoke_freeTicket1.setInt(1, topReviewId);
+            ResultSet rs1 = invoke_freeTicket1.executeQuery();
+            if (rs1.next()) {
+                movieID = rs1.getInt("movie_id");
+            }
+
+            // This query gets the movie title of the top review
+            String titleQuery = "select movie_title from Movie where movie_id = (?)";
+            PreparedStatement invoke_freeTicket2 = conn.prepareStatement(titleQuery);
+            invoke_freeTicket2.setInt(1, movieID);
+            ResultSet rs2 = invoke_freeTicket2.executeQuery();
+            if (rs2.next()) {
+                System.out.println(">>      The winner of  FREE TICKET is:  " + rs1.getString("customer_Name") + " !!");
+                System.out.println(">>      User " + rs1.getString("customer_Name") + "'s review: \n>>      ");
+                System.out.println(">>      `" + rs1.getString("review") + "`\n>>      ");
+                System.out.println(">>      for movie `" + rs2.getString("movie_title") + "` has " + reviewVote + " votes, which is the top rated review within the past 3 days.");
+            }
+
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("There is no winner of free ticket for the past 3 days\n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+    }
+    
+    
+    
     // procedure to find the movie with most reviews before a certain date
     public static void mostReview (Connection conn, String date) {
     	
