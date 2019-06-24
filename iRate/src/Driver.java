@@ -115,15 +115,17 @@ public class Driver {
 
 
             // freeGift function testing
-            System.out.println("*****Test for freeGift function*****\n");
+            System.out.println("\n*****Test for freeGift function*****\n");
             Helper.freeGift(conn, "2019-06-26");
 
-            System.out.println("*****Test for movieRating function*****\n");
+            System.out.println("\n*****Test for movieRating function*****\n");
             Helper.movieRating(conn, "Rush hour");
             
+            System.out.println("\n*****Test for freeTicket function*****\n");
+            Helper.freeTicket(conn);
             
             // mostReview function testing
-            System.out.println("*****Test for mostReview function*****\n");
+            System.out.println("\n*****Test for mostReview function*****\n");
             Helper.mostReview(conn, "2019-06-24");
 
 //            // freeTicket function testing
