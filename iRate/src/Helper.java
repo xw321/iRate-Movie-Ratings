@@ -163,4 +163,97 @@ public class Helper {
              }
     	 }  	
     }
+    
+    
+        // Show the top voted review of a movie
+    public static void topReview(Connection conn, String movie) {
+
+        try {
+            // This query gets the movie title of the top review
+            String titleQuery = "select movie_id from Movie where movie_title = (?)";
+            PreparedStatement invoke_getMovieId = conn.prepareStatement(titleQuery);
+            invoke_getMovieId.setString(1, movie);
+            ResultSet rs2 = invoke_getMovieId.executeQuery();
+            int movieId = 0;
+            if (rs2.next()) {
+                movieId = rs2.getInt("movie_id");
+            }
+            // This query will select the review_id and its count that satisfies the requirement
+            String query0 = "select Endorsement.review_id, count(*) AS nor from Endorsement LEFT JOIN Review ON Endorsement.review_id = Review.review_id" +
+                    " WHERE Review.movie_id = (?) " +
+                    " GROUP BY Endorsement.review_id ORDER BY Endorsement.review_id DESC ";
+
+            PreparedStatement invoke_getTopReview = conn.prepareStatement(query0);
+            invoke_getTopReview.setInt(1, movieId);
+            ResultSet rsReview = invoke_getTopReview.executeQuery();
+            int reviewVote = 0;
+            int topReviewId = 0;
+
+            if (rsReview.next()) {
+                reviewVote = rsReview.getInt("nor");
+                topReviewId = rsReview.getInt("review_id");
+            }
+
+            // This query will  select the author of the top voted review, which we obtained in query0, and all other info about that review
+            String query1 = "select * from Customer LEFT JOIN Review ON Customer.customer_id = Review.customer_id WHERE Review.review_id = (?)";
+            PreparedStatement invoke_getAuthor = conn.prepareStatement(query1);
+            invoke_getAuthor.setInt(1, topReviewId);
+            ResultSet rs1 = invoke_getAuthor.executeQuery();
+
+            if (rs1.next()) {
+                System.out.println("Top review of movie " + movie + " is by user " + rs1.getString("customer_Name") + ". It has " + reviewVote + " votes : \n");
+                System.out.println("`" + rs1.getString("review") + "`\n");
+
+            }
+
+        } catch (SQLException ex) {
+            System.out.printf("No top review for such movie");
+        }
+
+    }
+    
+    
+        //TODO: select the movie that has most customer attendance
+    public static void topBoxOfficeMovie(Connection conn) {
+
+    }
+
+    //TODO: select popular movies sort by number of reviews, high to low
+    public static void popularMovie(Connection conn) {
+
+    }
+
+    //TODO: select movies sort by average ratings, high to low
+    public static void topRatedMovie(Connection conn) {
+
+    }
+
+    //TODO: select user who wrote most reviews
+    public static void topContributor(Connection conn) {
+
+    }
+
+    //TODO: select user who voted most
+    public static void topVoter(Connection conn) {
+
+    }
+
+    //TODO: select user who attended most
+    public static void topViewer(Connection conn) {
+
+    }
+
+    /*TODO: display given user's number of different actions:
+     how many reviews he/she wrote;
+     how many votes he/she gave;
+     how many movies he/she attend;
+     */
+    public static void displayUserAction(Connection conn, String userName) {
+
+    }
+    
+    
+    
+    
+    
 }
