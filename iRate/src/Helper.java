@@ -21,7 +21,7 @@ public class Helper {
     
     public static String freeTicket(Timestamp date) {
         return "SELECT Customer.customer_Name, COUNT(*) AS COUNT"
-                + " FROM (Review JOIN Endorsement ON Review.review_id = Endorsement.review_id "
+                + "FROM (Review JOIN Endorsement ON Review.review_id = Endorsement.review_id "
                 + "JOIN Customer ON Review.customer_id = Customer.customer_id) "
                 + "WHERE review_date <= " + date
                 + "review_date >= select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, " + date
