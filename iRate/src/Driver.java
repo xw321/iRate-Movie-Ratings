@@ -3,16 +3,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Properties;
 
-/**
- * This program tests the version of the publication database tables for Assignment 5
- * that uses relation tables for the PublishedBy and PublishedIn relations. The sample
- * data is stored in a tab-separated data file The columns of the data file are:
- * pubName, pubCity, jnlName, jnlISSN, artTitle, artDOI, auFamiily, auGiven, auORCID
- *
- * @author philip gust
- */
 public class Driver {
     static void parseData(PreparedStatement preparedStatement, String file, int columns) {
         try {
@@ -24,20 +17,21 @@ public class Driver {
                     continue;
                 }
 
+                String timeStampPattern = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]";
                 for (int i = 0; i < columns; i++) {
-                    //TODO: change validation to regex
-                    if (data[i].length() == 19 && data[i].substring(0, 3).equals("201")) {
+                    if (data[i].matches(timeStampPattern)) {
                         Timestamp ts = Timestamp.valueOf(data[i]);
                         preparedStatement.setTimestamp(i + 1, ts);
                     } else {
                         preparedStatement.setString(i + 1, data[i].trim());
                     }
                 }
-                
+
                 try {
                     preparedStatement.executeUpdate();
                 } catch (SQLException ex) {
                     System.out.println("~~~~~~OOPS~~~~~~ Invalid Record from " + file + " : " + Arrays.toString(data));
+                    System.out.println("Error message: " + ex.getMessage() + "\n");
                     //ex.printStackTrace();
                 }
             }
@@ -120,77 +114,48 @@ public class Driver {
             rs.close();
 
             // freeGift function testing
-            PreparedStatement invoke_freeGift  =
-                    conn.prepareStatement("values ( freeGift(?) )");
-            System.out.println("");
-            System.out.println("Test for freeGift function");
-    
-            String [] queryDate = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
-            for (String date : queryDate) {                 
+            System.out.println("*****Test for freeGift function*****\n");
+            String query0 = "select endorser_id from Endorsement";
+            PreparedStatement invoke_freeGift = conn.prepareStatement(query0);
+
+            String[] queryDate = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
+            for (String date : queryDate) {
                 try {
-                    invoke_freeGift.setString(1, date);
+                    //invoke_freeGift.setString(1, date);
                     ResultSet rs5 = invoke_freeGift.executeQuery();
                     if (rs5.next()) {
                         System.out.println("The winner of the free concession items are: ");
-                        System.out.println(rs5.getString("customer_Name"));
-                
-                    }rs5.close();
+                        System.out.println(rs5.getInt("endorser_id"));
+
+                    }
+                    rs5.close();
                 } catch (SQLException ex) {
                     System.out.printf("There is no winner of the free concession items that day");
                 }
             }
-            
-            // freeTicket function testing
-            PreparedStatement invoke_freeTicket  =
-                    conn.prepareStatement("values ( freeTicket(?) )");
-            System.out.println("");
-            System.out.println("Test for freeTicket function");
-    
-            String [] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
-            for (String date : queryDate2) {                    
-                try {
-                    invoke_freeGift.setString(1, date);
-                    ResultSet rs2 = invoke_freeTicket.executeQuery();
-                    if (rs2.next()) {
-                        System.out.println("The winner of the free ticket is: ");
-                        System.out.println(rs2.getString("customer_Name"));
-                
-                    }rs2.close();
-                } catch (SQLException ex) {
-                    System.out.printf("There is no winner of the free ticket that day");
-                }
-            }
 
+//            // freeTicket function testing
+//            PreparedStatement invoke_freeTicket =
+//                    conn.prepareStatement("values ( freeTicket(?) )");
+//            System.out.println("");
+//            System.out.println("Test for freeTicket function");
+//
+//            String[] queryDate2 = {"1960-01-01 23:03:20", "2019-07-01 23:03:20"};
+//            for (String date : queryDate2) {
+//                try {
+//                    invoke_freeGift.setString(1, date);
+//                    ResultSet rs2 = invoke_freeTicket.executeQuery();
+//                    if (rs2.next()) {
+//                        System.out.println("The winner of the free ticket is: ");
+//                        System.out.println(rs2.getString("customer_Name"));
+//
+//                    }
+//                    rs2.close();
+//                } catch (SQLException ex) {
+//                    System.out.printf("There is no winner of the free ticket that day");
+//                }
+//            }
 
-//            // delete article
-//            System.out.println("\nDeleting article 10.1145/2838730 from CACM with 3 authors");
-//            stmt.execute("delete from Article where doi = '10.1145/2838730'");
-//            PubUtil.printArticles(conn);
-//            PubUtil.printAuthors(conn);
-//
-//            // delete publisher ACM
-//            System.out.println("\nDeleting publisher ACM");
-//            stmt.executeUpdate("delete from Publisher where name = 'ACM'");
-//            PubUtil.printPublishers(conn);
-//            PubUtil.printJournals(conn);
-//            PubUtil.printArticles(conn);
-//            PubUtil.printAuthors(conn);
-//
-//            // delete journal Spectrum (0018-9235)
-//            System.out.println("\nDeleting journal Spectrum from IEEE");
-//            stmt.executeUpdate("delete from Journal where issn = " + Biblio.parseIssn("0018-9235"));
-//            PubUtil.printJournals(conn);
-//            PubUtil.printArticles(conn);
-//            PubUtil.printAuthors(conn);
-//
-//
-//            // delete journal Computer
-//            System.out.println("\nDeleting journal Computer from IEEE");
-//            stmt.executeUpdate("delete from Journal where title = 'Computer'");
-//            PubUtil.printPublishers(conn);
-//            PubUtil.printJournals(conn);
-//            PubUtil.printArticles(conn);
-//            PubUtil.printAuthors(conn);
 
         } catch (
                 SQLException e) {
