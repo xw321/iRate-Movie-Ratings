@@ -21,20 +21,7 @@ public class Helper {
         return new java.sql.Timestamp(date.getTime());
     }
 
-    public static String freeGift(Timestamp date) {
-        return "SELECT Customer.customer_Name FROM Customer "
-                + "JOIN Endorsement ON Customer.customer_id = Endorsement.customer_id WHERE endorse_date = " + date;
-    }
-
-    public static String freeTicket(Timestamp date) {
-        return "SELECT Customer.customer_Name, COUNT(*) AS COUNT"
-                + " FROM (Review JOIN Endorsement ON Review.review_id = Endorsement.review_id "
-                + "JOIN Customer ON Review.customer_id = Customer.customer_id) "
-                + "WHERE review_date <= " + date
-                + "review_date >= select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, " + date
-                + ")}) from sysibm.sysdummy1"
-                + "GROUP BY Endorsement.review_id ORDER BY COUNT DESC limit(1)";
-    }
+    
 
     public static void freeGift(Connection conn, String date) {
         if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
