@@ -20,7 +20,7 @@ public class Tables {
 
         // triggers created by this program
         String dbTriggers[] = {"review_limit_by_attendance", "review_limit_by_date", "review_limit_by_date2",
-                "endorse_limit_by_date", "endorse_limit_by_customer"};
+                "endorse_limit_by_date", "endorse_limit_by_customer", "endorse_limit_by_oneDay"};
 
         // procedures created by this program
         String storedFunctions[] = {"isEmail", "freeGift", "freeTicket"};
@@ -28,8 +28,8 @@ public class Tables {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user2");
-        props.put("password", "user2");
+        props.put("user", "user1");
+        props.put("password", "user1");
 
         try (
                 // connect to the database using URL
@@ -110,7 +110,7 @@ public class Tables {
             stmt.executeUpdate(create_freeTicket);
             System.out.println("Created function freeTicket()");
 
-            
+
             // create the Customer table
             String createTable_Customer =
                     "create table Customer("
@@ -226,13 +226,12 @@ public class Tables {
 
 
 
-            /*
-       Create trigger endorse_limit
-       Constraints:
-       1) if a customer is the one who wrote the review, cannot endorse.
-       2) if the endorse_date is after 3 days when the review was written, cannot endorse.
-       */
-
+                /*
+           Create trigger endorse_limit
+           Constraints:
+           1) if a customer is the one who wrote the review, cannot endorse.
+           2) if the endorse_date is after 3 days when the review was written, cannot endorse.
+           */
 
             //create Trigger endorse_limit_by_date: review has to have  earlier time than its endorsements
             String createTrigger_endorse_limit_by_date =
@@ -257,7 +256,22 @@ public class Tables {
             stmt.executeUpdate(createTrigger_endorse_limit_by_customer);
             System.out.println("Created review_limit trigger for Review by Customer");
 
-            // TODO: add endorsement trigger limit by one-day-after for same review
+            String createTrigger_endorse_limit_by_oneDay =
+                    "create trigger endorse_limit_by_oneDay"
+                            + " after insert ON Endorsement"
+                            + " REFERENCING new as insertedRow"
+                            + " for each row MODE DB2SQL "
+                            + "   delete from Endorsement where review_id = insertedRow.review_id AND endorser_id = insertedRow.endorser_id AND endorse_date = insertedRow.endorse_date " +
+                            " AND {fn TIMESTAMPDIFF( SQL_TSI_DAY, timestamp(insertedRow.endorse_date),   "
+                            // get this user's most recent endorse_date of a review for the same movie
+                            + "     (select max(timestamp(endorse_date)) as mostRecentDate from Endorsement LEFT JOIN Review " +
+                            "ON Endorsement.review_id = Review.review_id " +
+                            "where timestamp(Endorsement.endorse_date) < timestamp(insertedRow.endorse_date) AND Endorsement.endorser_id = insertedRow.endorser_id AND " +
+                            "Review.movie_id = (select movie_id from Review WHERE review_id = insertedRow.review_id))" +
+                            "   )} = 0";
+            stmt.executeUpdate(createTrigger_endorse_limit_by_oneDay);
+            System.out.println("Created review_limit trigger for Review by oneDay");
+
 
         } catch (SQLException e) {
             e.printStackTrace();
