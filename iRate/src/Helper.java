@@ -321,10 +321,17 @@ public class Helper {
      how many votes he/she gave;
      how many movies he/she attend;
      */
-    public static void registerUser(Connection conn) {
+ public static void registerUser(Connection conn) {
         System.out.print("Enter your Name : ");
         Scanner scannerName = new Scanner(System.in);
         String userName = scannerName.nextLine();
+
+
+        while (userName.equals("admin")) {
+            System.out.print("Invalid Name! Enter your name again : ");
+            scannerName = new Scanner(System.in);
+            userName = scannerName.nextLine();
+        }
 
         System.out.print("Enter your Email : ");
         Scanner scannerEmail = new Scanner(System.in);
@@ -360,6 +367,44 @@ public class Helper {
             System.out.println("Error message: " + ex.getMessage() + "\n");
 
         }
+    }
+    
+    public static int login(Connection conn) {
+        int customerId = 0;
+        System.out.print("Enter your Name for login : ");
+        Scanner scannerName = new Scanner(System.in);
+        String userName = scannerName.nextLine();
+
+        System.out.print("Enter your Email for login : ");
+        Scanner scannerEmail = new Scanner(System.in);
+        String email = scannerEmail.nextLine();
+
+        while (!isEmail(email)) {
+            System.out.print("Invalid Email! Enter your Email again for login : ");
+            scannerEmail = new Scanner(System.in);
+            email = scannerEmail.nextLine();
+        }
+
+        //excute query
+        try {
+            String query0 = "select * from Customer WHERE customer_Name = (?) AND email = (?)";
+            PreparedStatement invoke_findUser = conn.prepareStatement(query0);
+            invoke_findUser.setString(1, userName);
+            invoke_findUser.setString(2, email);
+            ResultSet rs0 = invoke_findUser.executeQuery();
+
+            if (rs0.next()) {
+                customerId = rs0.getInt("customer_id");
+            }
+
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to create new customer. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+        return customerId;
     }
 
 
