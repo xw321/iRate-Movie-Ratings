@@ -60,8 +60,10 @@ public class printTable {
 				int movie_id = rs.getInt(3);
 				Timestamp review_date = rs.getTimestamp(4);
 				int rating = rs.getInt(5);
+				String review = rs.getString(6);
 				System.out.printf("Review_id: %d Customer_id: %s Movie_id: %s Date: %s Rating: %s\n", review_id, customer_id, movie_id, review_date, rating);
-				System.out.println("");
+				System.out.println("Review: " + review);
+
 			}
 			rs.close();
 		} catch (SQLException e) {

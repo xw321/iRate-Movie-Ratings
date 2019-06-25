@@ -21,20 +21,7 @@ public class Helper {
         return new java.sql.Timestamp(date.getTime());
     }
 
-    public static String freeGift(Timestamp date) {
-        return "SELECT Customer.customer_Name FROM Customer "
-                + "JOIN Endorsement ON Customer.customer_id = Endorsement.customer_id WHERE endorse_date = " + date;
-    }
-
-    public static String freeTicket(Timestamp date) {
-        return "SELECT Customer.customer_Name, COUNT(*) AS COUNT"
-                + " FROM (Review JOIN Endorsement ON Review.review_id = Endorsement.review_id "
-                + "JOIN Customer ON Review.customer_id = Customer.customer_id) "
-                + "WHERE review_date <= " + date
-                + "review_date >= select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -3, " + date
-                + ")}) from sysibm.sysdummy1"
-                + "GROUP BY Endorsement.review_id ORDER BY COUNT DESC limit(1)";
-    }
+    
 
     public static void freeGift(Connection conn, String date) {
         if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
@@ -315,69 +302,7 @@ public class Helper {
             System.out.println("Can not add the movie" + title + ".");
         }
     }
-    
-    //this function can let user write a review and rating of a movie
-    public static void reviewMovie(Connection conn) {
-        // check where is a customer or admin
-    	int currentUser = Driver.CURRENT_USERID;
-    	
-    	// if admin, then do nothing.
-    	if (currentUser == 0) {
-    		return;
-    	}
-    	
-    	// Ask customer to enter information
-    	System.out.print ("Enter the movie title that you would like to review: ");
-    	Scanner scannerMovieTitle = new Scanner(System.in);
-        String movieTitle = scannerMovieTitle.nextLine();
-        
-        System.out.print ("Enter the your rating of this movie: ");
-    	Scanner scannerRate = new Scanner(System.in);
-        int rating = scannerRate.nextInt();
-    	
-    	System.out.print ("Enter the your review: ");
-     	Scanner scannerReview = new Scanner(System.in);
-        String review= scannerReview.nextLine();
-        
-        int movieID = 0;
-        try {
-        	
-        	// Get movie_id from movie_title that customer entered
-        	String query = "SELECT movie_id from Movie where Movie.movie_title = (?)";
-            PreparedStatement invoke_getMovieId = conn.prepareStatement(query);
-            invoke_getMovieId.setString(1, movieTitle);
-            ResultSet rs0 = invoke_getMovieId.executeQuery();
-            
-            if (rs0.next()) {
-            	movieID = rs0.getInt("movie_id");
-            }
-        	 
-        	//insert the review information
-            PreparedStatement insertRow_Review = conn.prepareStatement(
-                    "insert into Review ( customer_id, movie_id, review_date, rating, review) values(?, ?, ?, ?, ?)");
-            insertRow_Review.setInt(1, currentUser);
-            insertRow_Review.setInt(2, movieID);
-            insertRow_Review.setTimestamp(3, getCurrentTimestamp());
-            insertRow_Review.setInt(4, rating);
-            insertRow_Review.setString(5, review);
-
-            // USE executeUpdate() when insert into table
-            int rs1 = insertRow_Review.executeUpdate();
-
-            if (rs1 == 1) {
-                System.out.println("Successfully reviewed the movie:  " + movieTitle);
-            } else {
-                System.out.println("something wrong, might not insert successfully");
-            }
-
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.out.printf("Failed to create new customer. \n");
-            System.out.println("Error message: " + ex.getMessage() + "\n");
-
-        }
-    }
+   
     
 
     /*TODO: display given user's number of different actions:
@@ -472,45 +397,167 @@ public class Helper {
         return customerId;
     }
     
+    public static void reviewMovie(Connection conn) {
+        int id = Driver.CURRENT_USERID;
+        int movieId =0;
+        System.out.println("Enter the Name of movie you want to make review: ");
+        Scanner scannerName = new Scanner(System.in);
+        String movieName = scannerName.nextLine();
+        
+        try {
+            String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+            PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+            invoke_findTitle.setString(1,movieName);
+            ResultSet rs0 = invoke_findTitle.executeQuery();
+            if(rs0.next()) {
+                movieId = rs0.getInt("movie_id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Can not find the movie. \n");
+        }
+        
+        System.out.println("Rate the movie from 0 to 5: ");
+        Scanner scannerRat = new Scanner(System.in);
+        String reviewRat = scannerRat.nextLine();
+        int rating = Integer.parseInt(reviewRat);
+        
+        System.out.println("Feel free to write your review: ");
+        Scanner scannerRev = new Scanner(System.in);
+        String rev = scannerRev.nextLine();
+        
+        
+        try {
+            PreparedStatement insertRow_Review = conn.prepareStatement(
+                    "insert into Review(customer_id, movie_id, review_date, rating, review) values(?, ?, ?, ?, ?)");
+            insertRow_Review.setInt(1, id);
+            insertRow_Review.setInt(2, movieId);
+            insertRow_Review.setTimestamp(3, getCurrentTimestamp());
+            insertRow_Review.setInt(4, rating);
+            insertRow_Review.setString(5, rev);
+            
+            
+            int rs2 = insertRow_Review.executeUpdate();
+            if(rs2 == 1) {
+                System.out.println("Successfully make the review. ");
+            } else {
+                System.out.println("Did not make review successfully!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to make review. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+ 
+    }
+    
     public static void buyTicket(Connection conn) {
-    	int id = Driver.CURRENT_USERID;
-    	int movieId =0;
-    	System.out.println("Enter the Name of movie you want to watch: ");
-    	Scanner scannerName = new Scanner(System.in);
-    	String movieName = scannerName.nextLine();
-    	
-    	try {
-    		String query0 = "select movie_id from Movie WHERE movie_title = (?)";
-    		PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
-    		invoke_findTitle.setString(1,movieName);
-    		ResultSet rs0 = invoke_findTitle.executeQuery();
-    		if(rs0.next()) {
-    			movieId = rs0.getInt("movie_id");
-    		}
-    	} catch (SQLException ex) {
-    		ex.printStackTrace();
-    		System.out.println("Can not find the movie. \n");
-    	}
-    	
-    	try {
-    		PreparedStatement insertRow_Attendance = conn.prepareStatement(
-    				"insert into Attendance(movie_id, customer_id, attendance_date) values(?, ?, ?)");
-    		insertRow_Attendance.setInt(1, movieId);
-    		insertRow_Attendance.setInt(2, id);
-    		insertRow_Attendance.setTimestamp(3, getCurrentTimestamp());
-    		
-    		int rs2 = insertRow_Attendance.executeUpdate();
-    		if(rs2 == 1) {
-    			System.out.println("Successfully buy the ticket. ");
-    		} else {
-    			System.out.println("Did not buy the ticket successfully. Please try again!");
-    		}
-    	} catch (SQLException ex) {
+        int id = Driver.CURRENT_USERID;
+        int movieId =0;
+        System.out.println("Enter the Name of movie you want to watch: ");
+        Scanner scannerName = new Scanner(System.in);
+        String movieName = scannerName.nextLine();
+        
+        try {
+            String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+            PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+            invoke_findTitle.setString(1,movieName);
+            ResultSet rs0 = invoke_findTitle.executeQuery();
+            if(rs0.next()) {
+                movieId = rs0.getInt("movie_id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Can not find the movie. \n");
+        }
+        
+        try {
+            PreparedStatement insertRow_Attendance = conn.prepareStatement(
+                    "insert into Attendance(movie_id, customer_id, attendance_date) values(?, ?, ?)");
+            insertRow_Attendance.setInt(1, movieId);
+            insertRow_Attendance.setInt(2, id);
+            insertRow_Attendance.setTimestamp(3, getCurrentTimestamp());
+            
+            int rs2 = insertRow_Attendance.executeUpdate();
+            if(rs2 == 1) {
+                System.out.println("Successfully buy the ticket. ");
+            } else {
+                System.out.println("Did not buy the ticket successfully. Please try again!");
+            }
+        } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.printf("Failed to buy the ticket. \n");
             System.out.println("Error message: " + ex.getMessage() + "\n");
 
         }
+    }
+        
+        public static void voteReview(Connection conn) {
+        int id = Driver.CURRENT_USERID;
+        int movieId =0;
+        System.out.println("Enter the Name of movie which review you want to vote: ");
+        Scanner scannerName = new Scanner(System.in);
+        String movieName = scannerName.nextLine();
+        
+        try {
+            String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+            PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+            invoke_findTitle.setString(1,movieName);
+            ResultSet rs0 = invoke_findTitle.executeQuery();
+            if(rs0.next()) {
+                movieId = rs0.getInt("movie_id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Can not find the movie. \n");
+        }
+        
+        try {
+            String query3 = "select * from Review WHERE movie_id = (?)";
+            PreparedStatement invoke_findReview = conn.prepareStatement(query3);
+            invoke_findReview.setInt(1,movieId);
+            ResultSet rs4 = invoke_findReview.executeQuery();
+            while(rs4.next()) {
+                System.out.print(rs4.getInt("review_id")+ "   ");
+                System.out.println(rs4.getString("review"));
+            }
+            rs4.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Can not find the review_id. \n");
+        }
+        
+        System.out.println("Enter the Review_id of review you want to vote: ");
+        Scanner scannerId = new Scanner(System.in);
+        String choosenid = scannerId.nextLine();
+        int choosenId = Integer.parseInt(choosenid);
+        System.out.println(choosenId);
+        System.out.println(id);
+        System.out.println(getCurrentTimestamp());
+    
+        
+        try {
+            PreparedStatement insertRow_Endorsement = conn.prepareStatement(
+                    "insert into Endorsement(review_id, endorser_id, endorse_date) values(?, ?, ?)");
+            insertRow_Endorsement.setInt(1, choosenId);
+            insertRow_Endorsement.setInt(2, id);
+            insertRow_Endorsement.setTimestamp(3, Timestamp.valueOf("2019-06-26 12:03:20"));
+            
+            int rs2 = insertRow_Endorsement.executeUpdate();
+            if(rs2 == 1) {
+                System.out.println("Successfully vote for the review. ");
+            } else {
+                System.out.println("Did not vote the review successfully. Please try again!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to vote review. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+ 
+    
  
     }
 
