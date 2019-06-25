@@ -84,13 +84,13 @@ review_id, endorse_id, and endorse_date together are primary keys.
 - freeTicket(): function to select the author of the top voted review written 3 days ago.
 
 ### 6. Functions
-### Admin Function
+### Admin Functions
 - freeGift(): function to select the customers who get the concession.
 - freeTicket(): function to select the author of the top voted review written 3 days ago.
 - addMovie(): administrator could use this function to add a movie to the database.
 - deleteMovie(): administrator could use this function to delete a movie from the database.
 
-### Client Function
+### Client Functions
 - registerUser(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
 - login(): function for registered customer to login.
 - logout(): function for userer to logout.
