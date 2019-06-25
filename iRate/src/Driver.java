@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class Driver {
-    static int CURRENT_USERID = 0;
+    public static int CURRENT_USERID = 7012;
+    public static int scanFlag = 1;
+
     static void parseData(PreparedStatement preparedStatement, String file, int columns) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(file)));
@@ -33,7 +36,7 @@ public class Driver {
                 } catch (SQLException ex) {
                     System.out.println("~~~~~~OOPS~~~~~~ Invalid Record from " + file + " : " + Arrays.toString(data));
                     System.out.println("Error message: " + ex.getMessage() + "\n");
-                    //ex.printStackTrace();
+                    ex.printStackTrace();
                 }
             }
         } catch (SQLException | IOException e) {
@@ -41,12 +44,10 @@ public class Driver {
         }
     }
 
-
-    public static void main(String[] args) {
-        
+    static void buildTableFromFile() {
         // the default framework is embedded
         String protocol = "jdbc:derby:";
-        String dbName = "iRate10";
+        String dbName = "iRate";
         String connStr = protocol + dbName + ";create=true";
 
         // tables tested by this program
@@ -59,8 +60,8 @@ public class Driver {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user2");
-        props.put("password", "user2");
+        props.put("user", "user1");
+        props.put("password", "user1");
 
         // result set for queries
         ResultSet rs = null;
@@ -96,13 +97,18 @@ public class Driver {
             }
 
 
-            System.out.println("-----------Start tests-------------");
+            System.out.println("\n-----------Start building Database From text files-------------\n");
 
             parseData(insertRow_Customer, "customer_data.txt", 3);
+            System.out.println("finish inserting into table customer");
             parseData(insertRow_Movie, "movie_data.txt", 1);
+            System.out.println("finish inserting into table Movie");
             parseData(insertRow_Attendance, "attendance_data.txt", 3);
+            System.out.println("finish inserting into table attendance");
             parseData(insertRow_Review, "review_data.txt", 5);
+            System.out.println("finish inserting into table review");
             parseData(insertRow_Endorsement, "endorsement_data.txt", 3);
+            System.out.println("finish inserting into table endorsement\n");
 
 
             // print number of rows in tables
@@ -116,61 +122,104 @@ public class Driver {
             rs.close();
 
 
-            // freeGift function testing
-            System.out.println("\n*****Test for freeGift function*****\n");
-            Helper.freeGift(conn, "2019-06-26");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            System.out.println("\n*****Test for movieRating function*****\n");
-            Helper.movieRating(conn, "Rush hour");
-            
-            System.out.println("\n*****Test for freeTicket function*****\n");
-            Helper.freeTicket(conn);
-            
-            // mostReview function testing
-            System.out.println("\n*****Test for mostReview function*****\n");
-            Helper.mostReview(conn, "2019-06-24");
-            
-            
-            System.out.println("\n*****Test for Register function*****\n");
-            Helper.registerUser(conn);
-
-            printTable.printCustomer(conn);
-            
-            printTable.printMovie(conn);
-            
-            System.out.println("*****Test for deleteMovie function*****\n");
-            Helper.deleteMovie(conn, "Rush hour");
-            
-            printTable.printMovie(conn);
-            
-            System.out.println("*****Test for addMovie function*****\n");
-            Helper.addMovie(conn, "Rush hour");
-            
-            printTable.printMovie(conn);
-            
-            
-            CURRENT_USERID = Helper.login(conn);
-            System.out.println("\ncurrent login userId is: " + CURRENT_USERID);
-            
-            printTable.printAttendance(conn);
-            System.out.println("*****Test for buyTicket function*****\n");
-            Helper.buyTicket(conn);
-            printTable.printAttendance(conn);
-            
-            printTable.printEndorsement(conn);
-            System.out.println("*****Test for voteReview function*****\n");
-            Helper.voteReview(conn);            
-            printTable.printEndorsement(conn);
-            
-            printTable.printReview(conn);
-            System.out.println("*****Test for reviewMovie function*****\n");
-            Helper.reviewMovie(conn);            
-            printTable.printReview(conn);
+    }
 
 
+    public static void main(String[] args) {
+        buildTableFromFile();
+        String protocol = "jdbc:derby:";
+        String dbName = "iRate";
+        String connStr = protocol + dbName + ";create=true";
+        Properties props = new Properties(); // connection properties
+        // providing a user name and password is optional in the embedded
+        // and derbyclient frameworks
+        props.put("user", "user1");
+        props.put("password", "user1");
+        try (
+                Connection conn = DriverManager.getConnection(connStr, props);
+        ) {
+
+//            printTable.printEndorsement(conn);
+//            Helper.voteReview(conn);
+//
+//            printTable.printEndorsement(conn);
+//            Helper.voteReview(conn);
+//            printTable.printEndorsement(conn);
+//            Helper.voteReview(conn);
+//            printTable.printEndorsement(conn);
+//            Helper.voteReview(conn);
+//            printTable.printEndorsement(conn);
+
+            String emoji = "░▀░ █▀▀█ █▀▀█ ▀▀█▀▀ █▀▀\n" +
+                    "▀█▀ █▄▄▀ █▄▄█ ░░█░░ █▀▀\n" +
+                    "▀▀▀ ▀░▀▀ ▀░░▀ ░░▀░░ ▀▀▀";
+
+
+            String[] functionListNoParam = {"logout", "quit"};
+            String[] functionListConn = {"freeGift", "movieRating", "topReview", "freeTicket", "topBoxOfficeMovie",
+                    "topContributor", "deleteMovie", "addMovie", "registerUser", "login", "voteReview", "buyTicket", "reviewMovie", "displayReview"};
+            // Start user input below
+            System.out.println("\n\n\n" + emoji + "\n\nHi there, welcome to iRate! I am your iRate assistant.\nMy name is Amazon - Microsoft - Intel - Google - Oracle.\nYou can just call me AMIGO :-)\n");
+
+            System.out.println("We provide some APIs for you to call.\nYou can just type the name of the APi in console When prompted.\nHere is the List of API names:\n");
+
+            for (String func : functionListConn) {
+                System.out.println("   " + func);
+            }
+            for (String func : functionListNoParam) {
+                System.out.println("   " + func);
+            }
+
+            Object funcCall = new Helper();
+            while (scanFlag == 1) {
+                System.out.println("\nAmigo >>> Enter your New command here : ");
+                Scanner scannerName = new Scanner(System.in);
+                String command = scannerName.nextLine();
+                if (Arrays.asList(functionListNoParam).contains(command)) {
+                    java.lang.reflect.Method method = null;
+                    try {
+                        method = Helper.class.getMethod(command);
+                    } catch (SecurityException e) {
+                        // oops
+                    } catch (NoSuchMethodException e) {
+                        // oops
+                    }
+
+                    try {
+                        method.invoke(funcCall);
+                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalAccessException e) {
+                    } catch (java.lang.reflect.InvocationTargetException e) {
+                    }
+
+                } else if (Arrays.asList(functionListConn).contains(command)) {
+                    java.lang.reflect.Method method = null;
+                    try {
+                        method = Helper.class.getMethod(command, Connection.class);
+                    } catch (SecurityException e) {
+                        // oops
+                    } catch (NoSuchMethodException e) {
+                        // oops
+                    }
+
+                    try {
+                        method.invoke(funcCall, conn);
+                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalAccessException e) {
+                    } catch (java.lang.reflect.InvocationTargetException e) {
+                    }
+                } else {
+                    System.out.println("Amigo >>> No command for :  " + command);
+                }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 }
