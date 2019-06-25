@@ -107,7 +107,7 @@ review_id, endorse_id, and endorse_date together are primary keys.
 ## Future Improvement
 - To provide a web-based application and implement the front-end to the database. 
 - To implement index in the tables to support large dataset and fast query.
-- To provide Machine Learning technique: peak times that customers will attend a movie
+- To provide more analytical queries: peak times that customers will attend a movie
 
 
 ## Reference to the Class with Link:
