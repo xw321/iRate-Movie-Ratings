@@ -105,6 +105,9 @@ review_id, endorse_id, and endorse_date together are primary keys.
 - movieRating(): function to find the average rating of the selected movie.
 
 ## Future Improvement
+- To provide a web-based application and implement the front-end to the database. 
+- Implement index in the tables to support large dataset and fast query.
+- To provide Machine Learning technique: peak times that customers will attend a movie
 
 
 ## Reference to the Class with Link:
