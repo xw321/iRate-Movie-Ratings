@@ -150,6 +150,11 @@ public class Driver {
             
             CURRENT_USERID = Helper.login(conn);
             System.out.println("\ncurrent login userId is: " + CURRENT_USERID);
+            
+            printTable.printAttendance(conn);
+            System.out.println("*****Test for buyTicket function*****\n");
+            Helper.buyTicket(conn);
+            printTable.printAttendance(conn);
 
 
 
