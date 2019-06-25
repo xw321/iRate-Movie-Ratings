@@ -9,7 +9,7 @@ public class Tables {
     static void createTables() {
         // the default framework is embedded
         String protocol = "jdbc:derby:";
-        String dbName = "iRate";
+        String dbName = "iRate10";
         String connStr = protocol + dbName + ";create=true";
 
         // tables created by this program
@@ -28,8 +28,8 @@ public class Tables {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user1");
-        props.put("password", "user1");
+        props.put("user", "user2");
+        props.put("password", "user2");
 
         try (
                 // connect to the database using URL

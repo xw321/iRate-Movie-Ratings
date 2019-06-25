@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class Driver {
+    static int CURRENT_USERID = 0;
     static void parseData(PreparedStatement preparedStatement, String file, int columns) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(file)));
@@ -42,10 +43,10 @@ public class Driver {
 
 
     public static void main(String[] args) {
-        int CURRENT_USERID = 0;
+        
         // the default framework is embedded
         String protocol = "jdbc:derby:";
-        String dbName = "iRate";
+        String dbName = "iRate10";
         String connStr = protocol + dbName + ";create=true";
 
         // tables tested by this program
