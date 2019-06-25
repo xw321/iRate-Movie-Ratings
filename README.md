@@ -104,6 +104,20 @@ review_id, endorse_id, and endorse_date together are primary keys.
 - topContributor(): function to find customer who write most reviews.
 - movieRating(): function to find the average rating of the selected movie.
 
+## Running the application
+* ### Setup 
+1. Download iRate project to a local folder, import it to Eclipse/InteliJ or other IDE after unzipping.
+
+2. Download derby and add the .jar file to the project library.
+
+* ### Run the project through Main.java.
+1. Navigate to the Main.java file and run the application.
+
+2. If you run the app successfully, there will be a friendly user interface looks like 
+![Data Model](https://raw.githubusercontent.com/xw321/iRate-Movie-Ratings/master/userInterface.png)
+All results will be printed to console with clear segmnetation and detailed prompt information.
+Follow the instructions and choose what you want to do by tryping in the console.
+
 ## Future Improvement
 - To provide a web-based application and implement the front-end to the database. 
 - To implement index in the tables to support large dataset and fast query.
