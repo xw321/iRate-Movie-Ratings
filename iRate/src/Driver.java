@@ -42,6 +42,7 @@ public class Driver {
 
 
     public static void main(String[] args) {
+        int CURRENT_USERID = 0;
         // the default framework is embedded
         String protocol = "jdbc:derby:";
         String dbName = "iRate";
@@ -145,6 +146,10 @@ public class Driver {
             Helper.addMovie(conn, "Rush hour");
             
             printTable.printMovie(conn);
+            
+            
+            CURRENT_USERID = Helper.login(conn);
+            System.out.println("\ncurrent login userId is: " + CURRENT_USERID);
 
 
 
