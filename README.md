@@ -71,6 +71,12 @@ review_id, endorse_id, and endorse_date together are primary keys.
 ![Data Model](https://github.com/xw321/iRate-Movie-Ratings/blob/master/iRate%20data%20model.png)
 
 ### 4. Triggers
+1) review_limit_by_attendance: this trigger is created to make sure a customer has to attend a movie before he/she can review it.
+2) review_limit_by_date: this trigger is created to prevents any invalid review such that it has a review_date earlier than its actual attendance date.
+3) review_limit_by_date2: this trigger is created to delete the inserted review if the current date is longer than 7 days than reviewee's attendance date.
+4) endorse_limit_by_date: this trigger is created to make sure review from customers has to have earlier time than its endorsements.
+5) endorse_limit_by_customer: this trigger is created to delete the inserted endorsement if the customer is the one who wrote the review.
+
 
 ### 5. Stored Function
 
