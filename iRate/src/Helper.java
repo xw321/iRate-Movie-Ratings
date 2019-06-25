@@ -407,6 +407,48 @@ public class Helper {
         }
         return customerId;
     }
+    
+    public static void buyTicket(Connection conn) {
+    	int id = Driver.CURRENT_USERID;
+    	int movieId =0;
+    	System.out.println("Enter the Name of movie you want to watch: ");
+    	Scanner scannerName = new Scanner(System.in);
+    	String movieName = scannerName.nextLine();
+    	
+    	try {
+    		String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+    		PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+    		invoke_findTitle.setString(1,movieName);
+    		ResultSet rs0 = invoke_findTitle.executeQuery();
+    		if(rs0.next()) {
+    			movieId = rs0.getInt("movie_id");
+    		}
+    	} catch (SQLException ex) {
+    		ex.printStackTrace();
+    		System.out.println("Can not find the movie. \n");
+    	}
+    	
+    	try {
+    		PreparedStatement insertRow_Attendance = conn.prepareStatement(
+    				"insert into Attendance(movie_id, customer_id, attendance_date) values(?, ?, ?)");
+    		insertRow_Attendance.setInt(1, movieId);
+    		insertRow_Attendance.setInt(2, id);
+    		insertRow_Attendance.setTimestamp(3, getCurrentTimestamp());
+    		
+    		int rs2 = insertRow_Attendance.executeUpdate();
+    		if(rs2 == 1) {
+    			System.out.println("Successfully buy the ticket. ");
+    		} else {
+    			System.out.println("Did not buy the ticket successfully. Please try again!");
+    		}
+    	} catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to buy the ticket. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+ 
+    }
 
 
 }
