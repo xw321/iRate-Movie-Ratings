@@ -116,7 +116,14 @@ review_id, endorse_id, and endorse_date together are primary keys.
 2. If you run the app successfully, there will be a friendly user interface looks like 
 ![Data Model](https://raw.githubusercontent.com/xw321/iRate-Movie-Ratings/master/userInterface.png)
 All results will be printed to console with clear segmnetation and detailed prompt information.
-Follow the instructions and choose what you want to do by tryping in the console.
+Follow the instructions and choose what you want to do by typing in the console.
+
+## Challenges
+1. Comparing dates in derby: Solved by setting all dates in Timestamp data type, and using JDBC escape syntax.
+
+2. Creating trigger that limit a user to only endorse one review for the same movie on one day.
+
+3. Derby only allows AFTER INSERT event for insertions.
 
 ## Future Improvement
 - To provide a web-based application and implement the front-end to the database. 
