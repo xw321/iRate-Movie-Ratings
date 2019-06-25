@@ -155,6 +155,11 @@ public class Driver {
             System.out.println("*****Test for buyTicket function*****\n");
             Helper.buyTicket(conn);
             printTable.printAttendance(conn);
+            
+            printTable.printEndorsement(conn);
+            System.out.println("*****Test for voteReview function*****\n");
+            Helper.voteReview(conn);            
+            printTable.printEndorsement(conn);
 
 
 
