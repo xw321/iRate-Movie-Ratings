@@ -79,7 +79,9 @@ review_id, endorse_id, and endorse_date together are primary keys.
 
 
 ### 5. Stored Function
+### Client Function
 
+### Admin Function
 
 ## Future Improvement
 
