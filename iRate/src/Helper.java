@@ -187,33 +187,33 @@ public class Helper {
 
         }
     }
-    
+
     // procedure to find the movie with most reviews before a certain date
-    public static void mostReview (Connection conn, String date) {
-    	
-    	 if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
-             // Date format: yyyy-MM-dd
-             String endTime = " 23:59:59";
-              
-             Timestamp endTimeStamp = Timestamp.valueOf(date + endTime);
+    public static void mostReview(Connection conn, String date) {
 
-             // execute query
-             try {
-                 String query4 = "SELECT COUNT(review_id) AS reviewCnt, movie_id FROM Review GROUP BY movie_id ORDER BY reviewCnt DESC WHERE timestamp(Review.review_date) <= (?)";
-                 PreparedStatement invoke_mostReview = conn.prepareStatement(query4);
-                 invoke_mostReview.setTimestamp(1, endTimeStamp);
+        if (date.matches("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])")) {
+            // Date format: yyyy-MM-dd
+            String endTime = " 23:59:59";
 
-                 ResultSet rs5 = invoke_mostReview.executeQuery();
-                 while (rs5.next()) {
-                     //System.out.println("The movie with most reviews before date is: ");
-                     System.out.println("The movie with most reviews before " + date + "is :       " + rs5.getString("movie_id"));
+            Timestamp endTimeStamp = Timestamp.valueOf(date + endTime);
 
-                 }
-                 rs5.close();
-             } catch (SQLException ex) {
-                 System.out.printf("Cannot find the movie with the most reviews");
-             }
-    	 }  	
+            // execute query
+            try {
+                String query4 = "SELECT COUNT(review_id) AS reviewCnt, movie_id FROM Review GROUP BY movie_id ORDER BY reviewCnt DESC WHERE timestamp(Review.review_date) <= (?)";
+                PreparedStatement invoke_mostReview = conn.prepareStatement(query4);
+                invoke_mostReview.setTimestamp(1, endTimeStamp);
+
+                ResultSet rs5 = invoke_mostReview.executeQuery();
+                while (rs5.next()) {
+                    //System.out.println("The movie with most reviews before date is: ");
+                    System.out.println("The movie with most reviews before " + date + "is :       " + rs5.getString("movie_id"));
+
+                }
+                rs5.close();
+            } catch (SQLException ex) {
+                System.out.printf("Cannot find the movie with the most reviews");
+            }
+        }
     }
 
     public static void topBoxOfficeMovie(Connection conn) {
@@ -255,7 +255,7 @@ public class Helper {
 
     }
 
-    //TODO: select user who wrote most reviews
+
     public static void topContributor(Connection conn) {
         try {
             String query0 = "select customer_id, COUNT(*) AS topContributor from Review group by customer_id order by topContributor DESC";
@@ -287,33 +287,33 @@ public class Helper {
     public static void topViewer(Connection conn) {
 
     }
-    
+
     public static void deleteMovie(Connection conn, String title) {
-    	try {
-    		String query = "delete from Movie where movie_title = (?)";
-    		PreparedStatement invoke_deleteMovie = conn.prepareStatement(query);
-    		invoke_deleteMovie.setString(1, title);
-    		int rs0 = invoke_deleteMovie.executeUpdate();
-    		if(rs0 != 0) {
-    			System.out.println("The movie "+ title+" has been deleted");
-    		}		
-    	} catch (SQLException ex) {
-    		System.out.println("Can not find the movie" + title + ".");
-    	}
+        try {
+            String query = "delete from Movie where movie_title = (?)";
+            PreparedStatement invoke_deleteMovie = conn.prepareStatement(query);
+            invoke_deleteMovie.setString(1, title);
+            int rs0 = invoke_deleteMovie.executeUpdate();
+            if (rs0 != 0) {
+                System.out.println("The movie " + title + " has been deleted");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Can not find the movie" + title + ".");
+        }
     }
-    
+
     public static void addMovie(Connection conn, String title) {
-    	try {
-    		String query = "insert into Movie(movie_title) values (?)";
-    		PreparedStatement invoke_addMovie = conn.prepareStatement(query);
-    		invoke_addMovie.setString(1, title);
-    		int rs0 = invoke_addMovie.executeUpdate();
-    		if(rs0 != 0) {
-    			System.out.println("The movie "+ title+" has been added");
-    		}		
-    	} catch (SQLException ex) {
-    		System.out.println("Can not add the movie" + title + ".");
-    	}
+        try {
+            String query = "insert into Movie(movie_title) values (?)";
+            PreparedStatement invoke_addMovie = conn.prepareStatement(query);
+            invoke_addMovie.setString(1, title);
+            int rs0 = invoke_addMovie.executeUpdate();
+            if (rs0 != 0) {
+                System.out.println("The movie " + title + " has been added");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Can not add the movie" + title + ".");
+        }
     }
 
     /*TODO: display given user's number of different actions:
@@ -321,7 +321,8 @@ public class Helper {
      how many votes he/she gave;
      how many movies he/she attend;
      */
- public static void registerUser(Connection conn) {
+    
+    public static void registerUser(Connection conn) {
         System.out.print("Enter your Name : ");
         Scanner scannerName = new Scanner(System.in);
         String userName = scannerName.nextLine();
@@ -368,7 +369,7 @@ public class Helper {
 
         }
     }
-    
+
     public static int login(Connection conn) {
         int customerId = 0;
         System.out.print("Enter your Name for login : ");
