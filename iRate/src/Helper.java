@@ -315,6 +315,70 @@ public class Helper {
             System.out.println("Can not add the movie" + title + ".");
         }
     }
+    
+    //this function can let user write a review and rating of a movie
+    public static void reviewMovie(Connection conn) {
+        // check where is a customer or admin
+    	int currentUser = Driver.CURRENT_USERID;
+    	
+    	// if admin, then do nothing.
+    	if (currentUser == 0) {
+    		return;
+    	}
+    	
+    	// Ask customer to enter information
+    	System.out.print ("Enter the movie title that you would like to review: ");
+    	Scanner scannerMovieTitle = new Scanner(System.in);
+        String movieTitle = scannerMovieTitle.nextLine();
+        
+        System.out.print ("Enter the your rating of this movie: ");
+    	Scanner scannerRate = new Scanner(System.in);
+        int rating = scannerRate.nextInt();
+    	
+    	System.out.print ("Enter the your review: ");
+     	Scanner scannerReview = new Scanner(System.in);
+        String review= scannerReview.nextLine();
+        
+        int movieID = 0;
+        try {
+        	
+        	// Get movie_id from movie_title that customer entered
+        	String query = "SELECT movie_id from Movie where Movie.movie_title = (?)";
+            PreparedStatement invoke_getMovieId = conn.prepareStatement(query);
+            invoke_getMovieId.setString(1, movieTitle);
+            ResultSet rs0 = invoke_getMovieId.executeQuery();
+            
+            if (rs0.next()) {
+            	movieID = rs0.getInt("movie_id");
+            }
+        	 
+        	//insert the review information
+            PreparedStatement insertRow_Review = conn.prepareStatement(
+                    "insert into Review ( customer_id, movie_id, review_date, rating, review) values(?, ?, ?, ?, ?)");
+            insertRow_Review.setInt(1, currentUser);
+            insertRow_Review.setInt(2, movieID);
+            insertRow_Review.setTimestamp(3, getCurrentTimestamp());
+            insertRow_Review.setInt(4, rating);
+            insertRow_Review.setString(5, review);
+
+            // USE executeUpdate() when insert into table
+            int rs1 = insertRow_Review.executeUpdate();
+
+            if (rs1 == 1) {
+                System.out.println("Successfully reviewed the movie:  " + movieTitle);
+            } else {
+                System.out.println("something wrong, might not insert successfully");
+            }
+
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to create new customer. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+    }
+    
 
     /*TODO: display given user's number of different actions:
      how many reviews he/she wrote;
