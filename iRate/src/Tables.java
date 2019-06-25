@@ -176,7 +176,8 @@ public class Tables {
                             + "endorser_id INT NOT NULL,"
                             + "endorse_date TIMESTAMP NOT NULL,"
                             + "PRIMARY KEY (review_id, endorser_id, endorse_date),"
-                            + "FOREIGN KEY (review_id) REFERENCES Review (review_id)"
+                            + "FOREIGN KEY (review_id) REFERENCES Review (review_id),"
+                            + "FOREIGN KEY (endorser_id) REFERENCES Customer (customer_id)"
                             + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
