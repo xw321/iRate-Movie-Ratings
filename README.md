@@ -80,8 +80,17 @@ review_id, endorse_id, and endorse_date together are primary keys.
 
 ### 5. Stored Function
 ### Client Function
+- register(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
+- buyTicket(): 
+- revdiewMovie(): 
+- voteReview():
 
 ### Admin Function
+- freeGift(): function to select the customers who get the concession.
+- freeTicket(): function to select the author of the top voted review written 3 days ago.
+- addMovie(): administrator could use this function to add a movie to the database.
+- deleteMovie(): administrator could use this function to delete a movie from the database.
+- topReview(): function to show the top voted review of a movie.
 
 ## Future Improvement
 
