@@ -259,6 +259,34 @@ public class Helper {
     public static void topViewer(Connection conn) {
 
     }
+    
+    public static void deleteMovie(Connection conn, String title) {
+    	try {
+    		String query = "delete from Movie where movie_title = (?)";
+    		PreparedStatement invoke_deleteMovie = conn.prepareStatement(query);
+    		invoke_deleteMovie.setString(1, title);
+    		int rs0 = invoke_deleteMovie.executeUpdate();
+    		if(rs0 != 0) {
+    			System.out.println("The movie "+ title+" has been deleted");
+    		}		
+    	} catch (SQLException ex) {
+    		System.out.println("Can not find the movie" + title + ".");
+    	}
+    }
+    
+    public static void addMovie(Connection conn, String title) {
+    	try {
+    		String query = "insert into Movie(movie_title) values (?)";
+    		PreparedStatement invoke_addMovie = conn.prepareStatement(query);
+    		invoke_addMovie.setString(1, title);
+    		int rs0 = invoke_addMovie.executeUpdate();
+    		if(rs0 != 0) {
+    			System.out.println("The movie "+ title+" has been added");
+    		}		
+    	} catch (SQLException ex) {
+    		System.out.println("Can not add the movie" + title + ".");
+    	}
+    }
 
     /*TODO: display given user's number of different actions:
      how many reviews he/she wrote;
