@@ -76,6 +76,7 @@ review_id, endorse_id, and endorse_date together are primary keys.
 3) review_limit_by_date2: this trigger is created to delete the inserted review if the current date is longer than 7 days than reviewee's attendance date.
 4) endorse_limit_by_date: this trigger is created to make sure review from customers has to have earlier time than its endorsements.
 5) endorse_limit_by_customer: this trigger is created to delete the inserted endorsement if the customer is the one who wrote the review.
+6) endorse_limit_by_oneDay: this trigger is created to make sure that customers can only endorse once everyday.
 
 
 ### 5. Stored Function
