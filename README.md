@@ -82,7 +82,7 @@ review_id, endorse_id, and endorse_date together are primary keys.
 ### Client Function
 - register(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
 - buyTicket(): 
-- revdiewMovie(): 
+- reviewMovie(): 
 - voteReview():
 
 ### Admin Function
