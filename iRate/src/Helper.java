@@ -458,6 +458,61 @@ public class Helper {
         }
         return customerId;
     }
+	
+    public static void reviewMovie(Connection conn) {
+    	int id = Driver.CURRENT_USERID;
+    	int movieId =0;
+    	System.out.println("Enter the Name of movie you want to make review: ");
+    	Scanner scannerName = new Scanner(System.in);
+    	String movieName = scannerName.nextLine();
+    	
+    	try {
+    		String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+    		PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+    		invoke_findTitle.setString(1,movieName);
+    		ResultSet rs0 = invoke_findTitle.executeQuery();
+    		if(rs0.next()) {
+    			movieId = rs0.getInt("movie_id");
+    		}
+    	} catch (SQLException ex) {
+    		ex.printStackTrace();
+    		System.out.println("Can not find the movie. \n");
+    	}
+    	
+    	System.out.println("Rate the movie from 0 to 5: ");
+    	Scanner scannerRat = new Scanner(System.in);
+    	String reviewRat = scannerRat.nextLine();
+    	int rating = Integer.parseInt(reviewRat);
+    	
+    	System.out.println("Feel free to write your review: ");
+    	Scanner scannerRev = new Scanner(System.in);
+    	String rev = scannerRev.nextLine();
+    	
+    	
+    	try {
+    		PreparedStatement insertRow_Review = conn.prepareStatement(
+    				"insert into Review(customer_id, movie_id, review_date, rating, review) values(?, ?, ?, ?, ?)");
+    		insertRow_Review.setInt(1, id);
+    		insertRow_Review.setInt(2, movieId);
+    		insertRow_Review.setTimestamp(3, getCurrentTimestamp());
+    		insertRow_Review.setInt(4, rating);
+    		insertRow_Review.setString(5, rev);
+    		
+    		
+    		int rs2 = insertRow_Review.executeUpdate();
+    		if(rs2 == 1) {
+    			System.out.println("Successfully make the review. ");
+    		} else {
+    			System.out.println("Did not make review successfully!");
+    		}
+    	} catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to make review. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+ 
+    }
     
     public static void buyTicket(Connection conn) {
     	int id = Driver.CURRENT_USERID;
