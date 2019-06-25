@@ -78,23 +78,29 @@ review_id, endorse_id, and endorse_date together are primary keys.
 5) endorse_limit_by_customer: this trigger is created to delete the inserted endorsement if the customer is the one who wrote the review.
 6) endorse_limit_by_oneDay: this trigger is created to make sure that customers can only endorse once everyday.
 
+### 5. Stored Functions
+- isEmail(): function to check the validation of the email.
+- freeGift(): function to select the customers who get the concession.
+- freeTicket(): function to select the author of the top voted review written 3 days ago.
 
-### 5. Stored Function
-### Client Function
-- register(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
-- buyTicket(): function to let customers to buy a movie.
-- reviewMovie(): function that let customers to enter review of a movie.
-- voteReview(): function that let custoers to vote a movie.
-
+### 6. Functions
 ### Admin Function
 - freeGift(): function to select the customers who get the concession.
 - freeTicket(): function to select the author of the top voted review written 3 days ago.
 - addMovie(): administrator could use this function to add a movie to the database.
 - deleteMovie(): administrator could use this function to delete a movie from the database.
+
+### Client Function
+- registerUser(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
+
+- buyTicket(): function to let customers to buy a movie.
+- reviewMovie(): function that let customers to enter review of a movie.
+- voteReview(): function that let custoers to vote a movie.
 - topReview(): function to show the top voted review of a movie.
 - mostReview(): function to find the movie with most reviews before a certain date.
 - topBoxOfficeMovie(): function to find the movie with most attendance.
 - topContributor(): function to find customer who write most reviews
+
 
 ## Future Improvement
 
