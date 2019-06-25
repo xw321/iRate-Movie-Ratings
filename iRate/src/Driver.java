@@ -133,6 +133,18 @@ public class Driver {
             Helper.registerUser(conn);
 
             printTable.printCustomer(conn);
+            
+            printTable.printMovie(conn);
+            
+            System.out.println("*****Test for deleteMovie function*****\n");
+            Helper.deleteMovie(conn, "Rush hour");
+            
+            printTable.printMovie(conn);
+            
+            System.out.println("*****Test for addMovie function*****\n");
+            Helper.addMovie(conn, "Rush hour");
+            
+            printTable.printMovie(conn);
 
 
 
