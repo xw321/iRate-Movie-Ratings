@@ -498,6 +498,72 @@ public class Helper {
             System.out.println("Error message: " + ex.getMessage() + "\n");
 
         }
+        
+        public static void voteReview(Connection conn) {
+    	int id = Driver.CURRENT_USERID;
+    	int movieId =0;
+    	System.out.println("Enter the Name of movie which review you want to vote: ");
+    	Scanner scannerName = new Scanner(System.in);
+    	String movieName = scannerName.nextLine();
+    	
+    	try {
+    		String query0 = "select movie_id from Movie WHERE movie_title = (?)";
+    		PreparedStatement invoke_findTitle = conn.prepareStatement(query0);
+    		invoke_findTitle.setString(1,movieName);
+    		ResultSet rs0 = invoke_findTitle.executeQuery();
+    		if(rs0.next()) {
+    			movieId = rs0.getInt("movie_id");
+    		}
+    	} catch (SQLException ex) {
+    		ex.printStackTrace();
+    		System.out.println("Can not find the movie. \n");
+    	}
+    	
+    	try {
+    		String query3 = "select * from Review WHERE movie_id = (?)";
+    		PreparedStatement invoke_findReview = conn.prepareStatement(query3);
+    		invoke_findReview.setInt(1,movieId);
+    		ResultSet rs4 = invoke_findReview.executeQuery();
+    		while(rs4.next()) {
+    			System.out.print(rs4.getInt("review_id")+ "   ");
+    			System.out.println(rs4.getString("review"));
+    		}
+    		rs4.close();
+    	} catch (SQLException ex) {
+    		ex.printStackTrace();
+    		System.out.println("Can not find the review_id. \n");
+    	}
+    	
+    	System.out.println("Enter the Review_id of review you want to vote: ");
+    	Scanner scannerId = new Scanner(System.in);
+    	String choosenid = scannerId.nextLine();
+    	int choosenId = Integer.parseInt(choosenid);
+    	System.out.println(choosenId);
+    	System.out.println(id);
+    	System.out.println(getCurrentTimestamp());
+	
+    	
+    	try {
+    		PreparedStatement insertRow_Endorsement = conn.prepareStatement(
+    				"insert into Endorsement(review_id, endorser_id, endorse_date) values(?, ?, ?)");
+    		insertRow_Endorsement.setInt(1, choosenId);
+    		insertRow_Endorsement.setInt(2, id);
+    		insertRow_Endorsement.setTimestamp(3, Timestamp.valueOf("2019-06-26 12:03:20"));
+    		
+    		int rs2 = insertRow_Endorsement.executeUpdate();
+    		if(rs2 == 1) {
+    			System.out.println("Successfully vote for the review. ");
+    		} else {
+    			System.out.println("Did not vote the review successfully. Please try again!");
+    		}
+    	} catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.printf("Failed to vote review. \n");
+            System.out.println("Error message: " + ex.getMessage() + "\n");
+
+        }
+ 
+    }
  
     }
 
