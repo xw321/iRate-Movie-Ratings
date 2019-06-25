@@ -160,6 +160,11 @@ public class Driver {
             System.out.println("*****Test for voteReview function*****\n");
             Helper.voteReview(conn);            
             printTable.printEndorsement(conn);
+            
+            printTable.printReview(conn);
+            System.out.println("*****Test for reviewMovie function*****\n");
+            Helper.reviewMovie(conn);            
+            printTable.printReview(conn);
 
 
 
