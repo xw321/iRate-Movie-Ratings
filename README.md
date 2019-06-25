@@ -92,15 +92,17 @@ review_id, endorse_id, and endorse_date together are primary keys.
 
 ### Client Function
 - registerUser(): customers/administrator are able to use this to register for an account by entering their name and email address. Once registered, customers and administor will be able to use different functions that are available to them.
-
+- login(): function for registered customer to login.
+- logout(): function for userer to logout.
+- quit(): function to quit the application.
 - buyTicket(): function to let customers to buy a movie.
 - reviewMovie(): function that let customers to enter review of a movie.
 - voteReview(): function that let custoers to vote a movie.
 - topReview(): function to show the top voted review of a movie.
 - mostReview(): function to find the movie with most reviews before a certain date.
 - topBoxOfficeMovie(): function to find the movie with most attendance.
-- topContributor(): function to find customer who write most reviews
-
+- topContributor(): function to find customer who write most reviews.
+- movieRating(): function to find the average rating of the selected movie.
 
 ## Future Improvement
 
