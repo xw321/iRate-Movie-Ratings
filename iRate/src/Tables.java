@@ -9,7 +9,7 @@ public class Tables {
     static void createTables() {
         // the default framework is embedded
         String protocol = "jdbc:derby:";
-        String dbName = "iRate10";
+        String dbName = "iRate";
         String connStr = protocol + dbName + ";create=true";
 
         // tables created by this program
@@ -28,8 +28,8 @@ public class Tables {
         Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
         // and derbyclient frameworks
-        props.put("user", "user2");
-        props.put("password", "user2");
+        props.put("user", "user1");
+        props.put("password", "user1");
 
         try (
                 // connect to the database using URL
@@ -176,8 +176,8 @@ public class Tables {
                             + "endorser_id INT NOT NULL,"
                             + "endorse_date TIMESTAMP NOT NULL,"
                             + "PRIMARY KEY (review_id, endorser_id, endorse_date),"
-                            + "FOREIGN KEY (review_id) REFERENCES Review (review_id),"
-                            + "FOREIGN KEY (endorser_id) REFERENCES Customer (customer_id)"
+                            + "FOREIGN KEY (review_id) REFERENCES Review (review_id) on delete cascade ,"
+                            + "FOREIGN KEY (endorser_id) REFERENCES Customer (customer_id) on delete cascade "
                             + ")";
             stmt.executeUpdate(createTable_Endorsement);
             System.out.println("Created table Endorsement");
@@ -206,7 +206,7 @@ public class Tables {
                             + " after insert ON Review"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Review where timestamp(review_date) <"
+                            + "   delete from Review where  review_id = insertedRow.review_id AND timestamp(review_date) <"
                             + "     (select timestamp(attendance_date) from Attendance where "
                             + " Attendance.customer_id = insertedRow.customer_id AND Attendance.movie_id = insertedRow.movie_id)";
             stmt.executeUpdate(createTrigger_review_limit_by_date);
@@ -218,7 +218,7 @@ public class Tables {
                             + " after insert ON Review"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Review where (select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -7, insertedRow.review_date)}) from sysibm.sysdummy1) > "
+                            + "   delete from Review where review_id = insertedRow.review_id AND (select timestamp({fn TIMESTAMPADD(SQL_TSI_DAY, -7, insertedRow.review_date)}) from sysibm.sysdummy1) > "
                             + "     (select timestamp(attendance_date) from Attendance where "
                             + " Attendance.customer_id = insertedRow.customer_id AND Attendance.movie_id = insertedRow.movie_id)";
             stmt.executeUpdate(createTrigger_review_limit_by_date2);
@@ -239,7 +239,7 @@ public class Tables {
                             + " after insert ON Endorsement"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Endorsement where timestamp(insertedRow.endorse_date) <"
+                            + "   delete from Endorsement where review_id = insertedRow.review_id AND endorser_id = insertedRow.endorser_id AND endorse_date = insertedRow.endorse_date AND timestamp(insertedRow.endorse_date) <"
                             + "     (select timestamp(review_date) from Review where Review.review_id = insertedRow.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_date);
             System.out.println("Created endorse_limit trigger for endorse limit by Date");
@@ -251,7 +251,7 @@ public class Tables {
                             + " after insert ON Endorsement"
                             + " REFERENCING new as insertedRow"
                             + " for each row MODE DB2SQL"
-                            + "   delete from Endorsement where review_id = "
+                            + "   delete from Endorsement where review_id = insertedRow.review_id AND endorser_id = insertedRow.endorser_id AND endorse_date = insertedRow.endorse_date AND review_id = "
                             + "     (select review_id from Review where Review.customer_id = insertedRow.endorser_id AND insertedRow.review_id = Review.review_id)";
             stmt.executeUpdate(createTrigger_endorse_limit_by_customer);
             System.out.println("Created review_limit trigger for Review by Customer");
