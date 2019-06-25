@@ -8,7 +8,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Driver {
-    public static int CURRENT_USERID = 7012;
+    public static int CURRENT_USERID =7000;
     public static int scanFlag = 1;
 
     static void parseData(PreparedStatement preparedStatement, String file, int columns) {
@@ -36,11 +36,12 @@ public class Driver {
                 } catch (SQLException ex) {
                     System.out.println("~~~~~~OOPS~~~~~~ Invalid Record from " + file + " : " + Arrays.toString(data));
                     System.out.println("Error message: " + ex.getMessage() + "\n");
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
                 }
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            System.out.println("Error message: " + e.getMessage() + "\n");
+            //e.printStackTrace();
         }
     }
 
@@ -161,7 +162,7 @@ public class Driver {
 
             String[] functionListNoParam = {"logout", "quit"};
             String[] functionListConn = {"freeGift", "movieRating", "topReview", "freeTicket", "topBoxOfficeMovie",
-                    "topContributor", "deleteMovie", "addMovie", "registerUser", "login", "voteReview", "buyTicket", "reviewMovie", "displayReview"};
+                    "topContributor", "deleteMovie", "addMovie", "registerUser", "login", "voteReview", "buyTicket", "reviewMovie"};
             // Start user input below
             System.out.println("\n\n\n" + emoji + "\n\nHi there, welcome to iRate! I am your iRate assistant.\nMy name is Amazon - Microsoft - Intel - Google - Oracle.\nYou can just call me AMIGO :-)\n");
 

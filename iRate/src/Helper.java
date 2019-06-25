@@ -59,19 +59,21 @@ public class Helper {
                 invoke_freeGift.setTimestamp(2, endTimeStamp);
                 ResultSet rs5 = invoke_freeGift.executeQuery();
 
-                if (!rs5.isBeforeFirst()) {
-                    System.out.printf("There is no winner of the free concession items that day");
+                if (!rs5.next()) {
+                    System.out.printf("There is no winner of the free concession items that day !");
                     return;
+                } else {
+                    do {
+                        //System.out.println("The winner of the free concession items are: ");
+                        System.out.println("Winners of Free Gift on day " + date + ":       " + rs5.getString("customer_Name"));
+                    } while (rs5.next());
                 }
 
-                while (rs5.next()) {
-                    //System.out.println("The winner of the free concession items are: ");
-                    System.out.println("Winners of Free Gift on day " + date + ":       " + rs5.getString("customer_Name"));
 
-                }
                 rs5.close();
             } catch (SQLException ex) {
                 System.out.printf("There is no winner of the free concession items that day");
+                //ex.printStackTrace();
             }
         }
     }

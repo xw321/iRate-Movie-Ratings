@@ -274,7 +274,8 @@ public class Tables {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error message: " + e.getMessage() + "\n");
+            //e.printStackTrace();
         }
     }
 
